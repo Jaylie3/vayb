@@ -1,6 +1,7 @@
 import { categories } from "@/data/events";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { Icon } from "./Icon";
 
 type Props = {
   active?: string | null;

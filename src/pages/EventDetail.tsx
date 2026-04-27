@@ -58,7 +58,7 @@ const EventDetail = () => {
             </Link>
             {cat && (
               <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full glass-dark px-3 py-1 text-xs font-medium">
-                <span>{cat.emoji}</span> {cat.label}
+                <Icon name={cat.icon} className="h-3.5 w-3.5" /> {cat.label}
               </span>
             )}
             <h1 className="max-w-4xl font-display text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">

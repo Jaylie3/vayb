@@ -276,7 +276,7 @@ const SuccessPanel = ({ event, tier, qty, total, whatsapp, d }: any) => (
       <Icon name="check" className="h-9 w-9 text-white" />
       <span className="absolute inset-0 animate-pulse-glow rounded-full bg-gradient-sunset opacity-50 blur-xl" aria-hidden />
     </div>
-    <h1 className="mt-6 font-display text-4xl font-bold sm:text-5xl">You're in! 🎉</h1>
+    <h1 className="mt-6 inline-flex items-center justify-center gap-3 font-display text-4xl font-bold sm:text-5xl">You're in! <Icon name="gift" className="h-9 w-9 text-primary" /></h1>
     <p className="mt-3 text-muted-foreground">
       We've sent your QR ticket to WhatsApp <span className="font-semibold text-foreground">{whatsapp}</span>.
       See you at <span className="font-semibold text-foreground">{event.title}</span>.

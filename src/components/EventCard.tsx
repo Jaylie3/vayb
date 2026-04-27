@@ -32,7 +32,7 @@ export const EventCard = ({ event }: { event: Event }) => {
 
         {cat && (
           <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full glass-dark px-3 py-1 text-xs font-medium text-white">
-            <span>{cat.emoji}</span>
+            <Icon name={cat.icon} className="h-3.5 w-3.5" />
             {cat.label}
           </div>
         )}
