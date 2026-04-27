@@ -1,4 +1,3 @@
-import { Search, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,6 +11,7 @@ import heroImg from "@/assets/hero-festival.jpg";
 import { cities } from "@/data/events";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Icon } from "./Icon";
 
 export const Hero = () => {
   const [query, setQuery] = useState("");
@@ -38,7 +38,7 @@ export const Hero = () => {
       <div className="container relative flex min-h-[88vh] flex-col justify-center pb-20 pt-28 text-white">
         <div className="max-w-3xl">
           <span className="inline-flex animate-fade-up items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium text-white">
-            <Sparkles className="h-3.5 w-3.5 text-primary-glow" />
+            <Icon name="sparkles" className="h-3.5 w-3.5 text-primary-glow" />
             Tickets delivered straight to WhatsApp
           </span>
 
@@ -56,7 +56,7 @@ export const Hero = () => {
             className="mt-8 flex w-full max-w-2xl animate-fade-up flex-col gap-2 rounded-2xl glass p-2 shadow-pop delay-225 sm:flex-row sm:items-center sm:rounded-full"
           >
             <div className="flex flex-1 items-center gap-2 px-3">
-              <Search className="h-4 w-4 text-white/70" aria-hidden />
+              <Icon name="search" className="h-4 w-4 text-white/70" aria-hidden />
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -71,7 +71,7 @@ export const Hero = () => {
                   className="h-11 w-full gap-2 border-0 bg-transparent text-white sm:w-[160px]"
                   aria-label="Select city"
                 >
-                  <MapPin className="h-4 w-4 text-white/70" />
+                  <Icon name="map-pin" className="h-4 w-4 text-white/70" />
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -81,7 +81,7 @@ export const Hero = () => {
                 </SelectContent>
               </Select>
               <Button type="submit" variant="hero" size="lg" className="h-11">
-                <Search className="h-4 w-4" /> Search
+                <Icon name="search" className="h-4 w-4" /> Search
               </Button>
             </div>
           </form>

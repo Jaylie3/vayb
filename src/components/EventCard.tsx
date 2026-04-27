@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { MapPin, Flame } from "lucide-react";
 import { type Event, formatEventDate, formatZAR, categories } from "@/data/events";
+import { Icon } from "./Icon";
 
 export const EventCard = ({ event }: { event: Event }) => {
   const d = formatEventDate(event.date);
@@ -19,7 +19,6 @@ export const EventCard = ({ event }: { event: Event }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" aria-hidden />
 
-        {/* Date badge */}
         <div className="absolute left-4 top-4 flex flex-col items-center rounded-2xl bg-gradient-sunset px-3 py-2 text-white shadow-glow">
           <span className="text-[10px] font-bold leading-none tracking-widest">{d.month}</span>
           <span className="font-display text-xl font-bold leading-none">{d.day}</span>
@@ -27,7 +26,7 @@ export const EventCard = ({ event }: { event: Event }) => {
 
         {event.trending && (
           <div className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs font-bold text-secondary-foreground shadow-pop">
-            <Flame className="h-3 w-3" /> Trending
+            <Icon name="trending" className="h-3.5 w-3.5" /> Trending
           </div>
         )}
 
@@ -44,7 +43,7 @@ export const EventCard = ({ event }: { event: Event }) => {
           {event.title}
         </h3>
         <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <MapPin className="h-3.5 w-3.5" /> {event.venue}, {event.city}
+          <Icon name="map-pin" className="h-4 w-4" /> {event.venue}, {event.city}
         </p>
         <div className="flex items-center justify-between border-t border-border/60 pt-3">
           <div>
