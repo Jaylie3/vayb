@@ -177,7 +177,7 @@ const Checkout = () => {
                             active ? "border-primary bg-primary/5 shadow-glow" : "border-border hover:border-primary/40",
                           )}
                         >
-                          <m.icon className={cn("h-5 w-5", active ? "text-primary" : "text-muted-foreground")} />
+                          <Icon name={m.icon} className={cn("h-5 w-5", active ? "text-primary" : "text-muted-foreground")} />
                           <p className="mt-2 font-display font-semibold">{m.label}</p>
                           <p className="text-xs text-muted-foreground">{m.sub}</p>
                         </button>
