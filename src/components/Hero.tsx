@@ -12,6 +12,7 @@ import { cities } from "@/data/events";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "./Icon";
+import { HeroSentinel } from "./HeroSentinel";
 
 export const Hero = () => {
   const [query, setQuery] = useState("");
@@ -95,6 +96,7 @@ export const Hero = () => {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" aria-hidden />
+      <HeroSentinel />
     </section>
   );
 };

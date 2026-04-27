@@ -55,6 +55,40 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        /* Semantic --color-* tokens (preferred for new components) */
+        brand: {
+          primary: "hsl(var(--color-brand-primary))",
+          "primary-glow": "hsl(var(--color-brand-primary-glow))",
+          secondary: "hsl(var(--color-brand-secondary))",
+          accent: "hsl(var(--color-brand-accent))",
+        },
+        surface: {
+          DEFAULT: "hsl(var(--color-surface-default))",
+          raised: "hsl(var(--color-surface-raised))",
+          overlay: "hsl(var(--color-surface-overlay))",
+          inverse: "hsl(var(--color-surface-inverse))",
+        },
+        ink: {
+          primary: "hsl(var(--color-text-primary))",
+          secondary: "hsl(var(--color-text-secondary))",
+          muted: "hsl(var(--color-text-muted))",
+          inverse: "hsl(var(--color-text-inverse))",
+        },
+      },
+      backgroundImage: {
+        "gradient-sunset": "var(--gradient-sunset)",
+        "gradient-aurora": "var(--gradient-aurora)",
+        "gradient-dark": "var(--gradient-dark)",
+        "gradient-hero-overlay": "var(--gradient-hero-overlay)",
+      },
+      boxShadow: {
+        glow: "var(--shadow-glow)",
+        pop: "var(--shadow-pop)",
+        card: "var(--shadow-card)",
+        soft: "var(--shadow-soft)",
+      },
+      transitionTimingFunction: {
+        "bounce-sm": "cubic-bezier(0.34, 1.4, 0.64, 1)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,6 +99,7 @@ export default {
       },
       fontFamily: {
         display: ["'Space Grotesk'", "system-ui", "sans-serif"],
+        body: ["Inter", "system-ui", "sans-serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       keyframes: {
