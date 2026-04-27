@@ -71,6 +71,14 @@ const map = {
   chevron: mdilChevronDown,
   clipboard: mdilClipboardCheck,
   piggy: mdilClipboardCheck,
+  // Category & accent icons
+  microphone: mdilMicrophone,
+  trophy: mdilTrophy,
+  cart: mdilCart,
+  briefcase: mdilBriefcase,
+  flag: mdilFlag,
+  gift: mdilGift,
+  currency: mdilCurrencyUsd,
 } as const;
 
 export type IconName = keyof typeof map;
