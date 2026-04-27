@@ -1,26 +1,53 @@
 import { Zap, MessageCircle, PiggyBank, Compass } from "lucide-react";
 
 const items = [
-  { icon: Zap, title: "Same-day payouts", desc: "Organisers get paid the day tickets sell — not weeks later." },
-  { icon: MessageCircle, title: "WhatsApp tickets", desc: "Tickets land in your chats. No app downloads, no lost emails." },
-  { icon: PiggyBank, title: "Lower buyer fees", desc: "We charge a flat 3% — half the SA average. More gigs, less mark-up." },
-  { icon: Compass, title: "Built for discovery", desc: "Find events by city, vibe and friends going. Like a feed, but for plans." },
+  {
+    icon: Zap,
+    title: "Same-day payouts",
+    body: "Funds in your account the day fans buy. No 7-day waits.",
+  },
+  {
+    icon: MessageCircle,
+    title: "WhatsApp tickets",
+    body: "Tickets delivered to the app every South African already uses.",
+  },
+  {
+    icon: PiggyBank,
+    title: "Lower buyer fees",
+    body: "A flat 3% to fans. 0% to organisers. Honest pricing, finally.",
+  },
+  {
+    icon: Compass,
+    title: "Built for discovery",
+    body: "Curated by city, mood and moment — not buried in a list.",
+  },
 ];
 
 export const Differentiators = () => (
-  <section className="border-y border-border/60 bg-muted/30">
-    <div className="container grid gap-6 py-12 sm:grid-cols-2 lg:grid-cols-4">
-      {items.map(({ icon: Icon, title, desc }) => (
-        <div key={title} className="group flex gap-4">
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-sunset text-primary-foreground shadow-glow transition-bounce group-hover:scale-110">
-            <Icon className="h-5 w-5" />
+  <section className="bg-muted/50 py-20">
+    <div className="container">
+      <div className="mx-auto max-w-2xl text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Why Vayb</p>
+        <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">
+          Built for fans. <span className="text-gradient-sunset">Loved by organisers.</span>
+        </h2>
+      </div>
+      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {items.map((it, i) => (
+          <div
+            key={it.title}
+            className="group relative overflow-hidden rounded-3xl bg-card p-6 shadow-card transition-bounce hover:-translate-y-1 hover:shadow-pop animate-fade-up"
+            style={{ animationDelay: `${i * 80}ms` }}
+          >
+            <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-sunset text-white shadow-glow">
+              <it.icon className="h-5 w-5" />
+            </div>
+            <h3 className="font-display text-lg font-semibold">{it.title}</h3>
+            <p className="mt-1.5 text-sm text-muted-foreground">{it.body}</p>
+            <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-aurora opacity-0 blur-2xl transition-smooth group-hover:opacity-30" />
           </div>
-          <div>
-            <h3 className="font-display text-base font-semibold">{title}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </section>
 );

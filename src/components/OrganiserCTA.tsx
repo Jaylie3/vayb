@@ -1,40 +1,48 @@
+import { Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+
+const benefits = [
+  "Same-day EFT payouts",
+  "Flat 3% buyer fee, 0% to you",
+  "WhatsApp ticket delivery",
+  "Built-in referrals, ads & email",
+  "Scan-in app for the door",
+  "Live sales dashboard",
+];
 
 export const OrganiserCTA = () => (
-  <section id="organisers" className="container pb-24">
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-dark p-8 text-white shadow-pop md:p-16">
-      <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gradient-sunset opacity-40 blur-3xl animate-pulse-glow" />
-      <div className="absolute -bottom-32 -left-10 h-80 w-80 rounded-full bg-gradient-aurora opacity-30 blur-3xl animate-pulse-glow [animation-delay:1s]" />
+  <section id="organisers" className="container py-20">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-dark p-8 shadow-pop sm:p-14">
+      {/* Animated blobs */}
+      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-primary/40 blur-3xl animate-blob" aria-hidden />
+      <div className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-secondary/40 blur-3xl animate-blob [animation-delay:3s]" aria-hidden />
+      <div className="pointer-events-none absolute right-1/3 top-1/2 h-56 w-56 rounded-full bg-accent/30 blur-3xl animate-blob [animation-delay:6s]" aria-hidden />
 
-      <div className="relative grid gap-10 md:grid-cols-2 md:items-center">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-glow">For organisers</p>
-          <h2 className="mt-3 font-display text-3xl font-bold leading-tight md:text-5xl">
-            Get paid the day they buy.
+      <div className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
+        <div className="text-white">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary-glow">For organisers</p>
+          <h2 className="mt-3 font-display text-3xl font-bold leading-[1.1] sm:text-5xl">
+            Get paid the day{" "}
+            <span className="text-gradient-sunset">they buy.</span>
           </h2>
-          <p className="mt-4 text-white/80 md:text-lg">
-            Stop waiting weeks for your money. Vayb pays out daily, with built-in marketing tools, WhatsApp delivery, and a fee structure that doesn't punish your fans.
+          <p className="mt-5 max-w-md text-white/80">
+            Stop waiting a week for your money. Vayb pays out same-day, charges your fans less, and gives you the marketing tools to actually fill the room.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button variant="hero" size="lg">Start selling tickets</Button>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Button variant="hero" size="lg">
+              List your event <ArrowRight className="h-4 w-4" />
+            </Button>
             <Button variant="glass" size="lg">See pricing</Button>
           </div>
         </div>
-        <ul className="grid gap-3 rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-md">
-          {[
-            "Same-day payouts via EFT",
-            "Flat 3% buyer fee, 0% organiser fee",
-            "WhatsApp ticket delivery & reminders",
-            "Built-in referrals, ads & email tools",
-            "Real-time scan-in app for door staff",
-            "Live sales dashboard & exportable reports",
-          ].map((item) => (
-            <li key={item} className="flex items-start gap-3 text-sm text-white/90">
-              <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-sunset">
-                <Check className="h-3 w-3 text-primary-foreground" strokeWidth={3} />
+
+        <ul className="grid gap-3 rounded-3xl glass p-5 sm:p-7 sm:grid-cols-2">
+          {benefits.map((b) => (
+            <li key={b} className="flex items-start gap-3 text-sm text-white">
+              <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-sunset text-white shadow-glow">
+                <Check className="h-3.5 w-3.5" />
               </span>
-              {item}
+              <span className="font-medium">{b}</span>
             </li>
           ))}
         </ul>
