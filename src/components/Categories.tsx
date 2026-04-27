@@ -47,7 +47,7 @@ export const Categories = ({ active: activeProp, onChange }: Props) => {
                   : "border-border bg-card hover:-translate-y-1 hover:shadow-pop hover:border-primary/30",
               )}
             >
-              <span className="text-3xl transition-bounce group-hover:scale-110">{c.emoji}</span>
+              <Icon name={c.icon} className="h-7 w-7 transition-bounce group-hover:scale-110" />
               <span className="text-sm font-semibold">{c.label}</span>
             </button>
           );
