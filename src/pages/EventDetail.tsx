@@ -1,75 +1,90 @@
-import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Calendar, Clock, MapPin, ArrowLeft, MessageCircle, Share2, Minus, Plus, ShieldCheck } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowLeft, Calendar, Clock, MapPin, MessageCircle, Minus, Plus, Share2, Shield, Ticket } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { getEvent, formatEventDate, formatZAR } from "@/data/events";
-import { toast } from "@/hooks/use-toast";
+import { BUYER_FEE_RATE, categories, formatEventDate, formatZAR, getEvent } from "@/data/events";
+import NotFound from "./NotFound";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const EventDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const event = id ? getEvent(id) : undefined;
-  const [selected, setSelected] = useState(0);
+  const [tierId, setTierId] = useState<string>(event?.tickets[0].id ?? "");
   const [qty, setQty] = useState(1);
 
-  if (!event) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container py-32 text-center">
-          <h1 className="font-display text-3xl font-bold">Event not found</h1>
-          <Link to="/" className="mt-4 inline-block text-primary hover:underline">Back to discover</Link>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  if (!event) return <NotFound />;
 
+  const cat = categories.find((c) => c.slug === event.category);
   const d = formatEventDate(event.date);
-  const ticket = event.tickets[selected];
-  const subtotal = ticket.price * qty;
-  const fee = Math.round(subtotal * 0.03);
+  const tier = event.tickets.find((t) => t.id === tierId) ?? event.tickets[0];
+  const subtotal = tier.price * qty;
+  const fee = Math.round(subtotal * BUYER_FEE_RATE);
   const total = subtotal + fee;
+
+  const goCheckout = () => {
+    toast.success(`${qty} × ${tier.name} added`, { description: "Continue to checkout to confirm." });
+    navigate(`/checkout/${event.id}?ticket=${tier.id}&qty=${qty}`);
+  };
+
+  const onShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try { await navigator.share({ title: event.title, url }); return; } catch {}
+    }
+    await navigator.clipboard.writeText(url);
+    toast.success("Link copied to clipboard");
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header overlay />
+
       <main>
-        <section className="relative h-[55vh] min-h-[380px] overflow-hidden">
-          <img src={event.image} alt={event.title} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10" />
-          <div className="container relative flex h-full flex-col justify-between py-6">
-            <button onClick={() => navigate(-1)} className="inline-flex w-fit items-center gap-2 rounded-full bg-background/80 px-4 py-2 text-sm font-medium backdrop-blur-md transition-smooth hover:bg-background">
-              <ArrowLeft className="h-4 w-4" /> Back
-            </button>
-            <div className="max-w-3xl">
-              <span className="inline-block rounded-full bg-secondary/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-secondary-foreground backdrop-blur">
-                {event.category}
+        {/* Hero */}
+        <section className="relative -mt-16 h-[55vh] min-h-[420px] w-full overflow-hidden">
+          <img src={event.image} alt={`${event.title} at ${event.venue}`} className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-background" aria-hidden />
+
+          <div className="container relative flex h-full flex-col justify-end pb-10 pt-24 text-white">
+            <Link
+              to="/"
+              className="mb-5 inline-flex w-fit items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium hover:bg-white/20"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Back to discover
+            </Link>
+            {cat && (
+              <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full glass-dark px-3 py-1 text-xs font-medium">
+                <span>{cat.emoji}</span> {cat.label}
               </span>
-              <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-                {event.title}
-              </h1>
-              <p className="mt-2 text-sm text-muted-foreground">By {event.organiser}</p>
-            </div>
+            )}
+            <h1 className="max-w-4xl font-display text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+              {event.title}
+            </h1>
+            <p className="mt-3 text-sm text-white/80">By {event.organiser}</p>
           </div>
         </section>
 
+        {/* Body */}
         <section className="container grid gap-10 py-12 lg:grid-cols-[1fr_380px]">
-          <div className="space-y-8">
-            <div className="grid gap-4 sm:grid-cols-3">
+          {/* Left */}
+          <div className="space-y-10">
+            <div className="grid gap-3 sm:grid-cols-3">
               {[
-                { icon: Calendar, label: "Date", value: d.full },
-                { icon: Clock, label: "Doors", value: d.time },
-                { icon: MapPin, label: "Venue", value: `${event.venue}, ${event.city}` },
-              ].map(({ icon: Icon, label, value }) => (
-                <div key={label} className="rounded-2xl border border-border bg-gradient-card p-4 shadow-card">
-                  <div className="mb-2 grid h-9 w-9 place-items-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-4 w-4" />
+                { icon: Calendar, label: "Date", value: d.full, sub: d.time },
+                { icon: Clock, label: "Doors", value: event.doorsTime ?? d.time, sub: "Local time" },
+                { icon: MapPin, label: "Venue", value: event.venue, sub: event.city },
+              ].map((card) => (
+                <div key={card.label} className="rounded-2xl border border-border bg-card p-5 shadow-card">
+                  <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-sunset text-white shadow-glow">
+                    <card.icon className="h-4 w-4" />
                   </div>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
-                  <p className="mt-1 font-display text-sm font-semibold">{value}</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{card.label}</p>
+                  <p className="mt-1 font-display text-base font-semibold leading-tight">{card.value}</p>
+                  <p className="text-xs text-muted-foreground">{card.sub}</p>
                 </div>
               ))}
             </div>
@@ -79,102 +94,127 @@ const EventDetail = () => {
               <p className="mt-3 leading-relaxed text-muted-foreground">{event.description}</p>
             </div>
 
-            <div className="rounded-2xl border border-whatsapp/30 bg-whatsapp/5 p-5">
-              <div className="flex items-start gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-whatsapp text-whatsapp-foreground">
-                  <MessageCircle className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-display font-semibold">Tickets delivered via WhatsApp</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Your QR ticket and reminders arrive in chat — share with friends and scan at the door from your phone.
-                  </p>
-                </div>
+            <div className="flex items-start gap-4 rounded-2xl border border-whatsapp/30 bg-whatsapp/10 p-5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-whatsapp-foreground shadow-card">
+                <MessageCircle className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-display font-semibold">Tickets delivered to WhatsApp</p>
+                <p className="text-sm text-muted-foreground">
+                  Your QR ticket lands on WhatsApp seconds after checkout. No email digging, no app downloads.
+                </p>
               </div>
             </div>
 
-            <div className="flex gap-3">
-              <Button variant="outline" size="lg" className="gap-2">
-                <Share2 className="h-4 w-4" /> Share event
+            <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
+              <span className="text-sm font-medium">Share this event</span>
+              <Button variant="outline" size="sm" onClick={onShare}>
+                <Share2 className="h-4 w-4" /> Share
               </Button>
             </div>
           </div>
 
-          {/* Sticky ticket selector */}
+          {/* Right — sticky ticket rail */}
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <div className="rounded-3xl border border-border bg-gradient-card p-6 shadow-pop">
-              <h3 className="font-display text-lg font-bold">Choose your ticket</h3>
-              <div className="mt-4 space-y-2">
-                {event.tickets.map((t, i) => {
-                  const active = i === selected;
+              <div className="mb-4 flex items-center gap-2">
+                <Ticket className="h-4 w-4 text-primary" />
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Choose your ticket</p>
+              </div>
+
+              <div className="space-y-2.5">
+                {event.tickets.map((t) => {
+                  const active = t.id === tierId;
                   return (
                     <button
                       key={t.id}
-                      onClick={() => setSelected(i)}
-                      className={`w-full rounded-xl border-2 p-4 text-left transition-smooth ${
+                      onClick={() => setTierId(t.id)}
+                      className={cn(
+                        "w-full rounded-2xl border p-4 text-left transition-smooth",
                         active
                           ? "border-primary bg-primary/5 shadow-glow"
-                          : "border-border bg-background hover:border-primary/40"
-                      }`}
+                          : "border-border hover:border-primary/40 hover:bg-muted/40",
+                      )}
+                      aria-pressed={active}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="font-display font-semibold">{t.name}</span>
-                        <span className="font-display font-bold text-primary">{formatZAR(t.price)}</span>
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-display font-semibold">{t.name}</p>
+                            {t.badge && (
+                              <span className="rounded-full bg-secondary/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-secondary">
+                                {t.badge}
+                              </span>
+                            )}
+                          </div>
+                          <ul className="mt-2 space-y-0.5 text-xs text-muted-foreground">
+                            {t.perks.map((p) => (
+                              <li key={p}>· {p}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <p className="font-display text-base font-bold">{formatZAR(t.price)}</p>
                       </div>
-                      <ul className="mt-2 space-y-0.5">
-                        {t.perks.map((p) => (
-                          <li key={p} className="text-xs text-muted-foreground">• {p}</li>
-                        ))}
-                      </ul>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="mt-5 flex items-center justify-between rounded-xl bg-muted p-3">
+              {/* Quantity */}
+              <div className="mt-5 flex items-center justify-between rounded-2xl border border-border bg-background p-3">
                 <span className="text-sm font-medium">Quantity</span>
-                <div className="flex items-center gap-3">
-                  <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => setQty((q) => Math.max(1, q - 1))}>
-                    <Minus className="h-3 w-3" />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 rounded-full"
+                    onClick={() => setQty((q) => Math.max(1, q - 1))}
+                    aria-label="Decrease quantity"
+                    disabled={qty <= 1}
+                  >
+                    <Minus className="h-3.5 w-3.5" />
                   </Button>
-                  <span className="w-6 text-center font-display font-bold">{qty}</span>
-                  <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => setQty((q) => Math.min(10, q + 1))}>
-                    <Plus className="h-3 w-3" />
+                  <span className="w-6 text-center font-display text-base font-semibold">{qty}</span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 rounded-full"
+                    onClick={() => setQty((q) => Math.min(10, q + 1))}
+                    aria-label="Increase quantity"
+                    disabled={qty >= 10}
+                  >
+                    <Plus className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               </div>
 
-              <div className="mt-5 space-y-1.5 border-t border-border pt-4 text-sm">
+              {/* Summary */}
+              <div className="mt-5 space-y-1.5 text-sm">
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Subtotal</span><span>{formatZAR(subtotal)}</span>
+                  <span>{qty} × {tier.name}</span>
+                  <span>{formatZAR(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Booking fee (3%)</span><span>{formatZAR(fee)}</span>
+                  <span>Booking fee (3%)</span>
+                  <span>{formatZAR(fee)}</span>
                 </div>
-                <div className="flex justify-between pt-2 font-display text-lg font-bold">
-                  <span>Total</span><span className="text-gradient-sunset">{formatZAR(total)}</span>
+                <div className="flex items-center justify-between border-t border-border pt-3">
+                  <span className="font-display font-semibold">Total</span>
+                  <span className="font-display text-2xl font-bold text-gradient-sunset">{formatZAR(total)}</span>
                 </div>
               </div>
 
-              <Button
-                variant="hero"
-                size="xl"
-                className="mt-5 w-full"
-                onClick={() => {
-                  toast({ title: "Heading to checkout", description: `${qty} × ${ticket.name}` });
-                  navigate(`/checkout/${event.id}?ticket=${ticket.id}&qty=${qty}`);
-                }}
-              >
+              <Button variant="hero" size="lg" className="mt-5 w-full" onClick={goCheckout}>
                 Get tickets · {formatZAR(total)}
               </Button>
-              <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
-                <ShieldCheck className="h-3.5 w-3.5 text-success" />
-                Secure checkout · PayFast, card & EFT
+              <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+                <Shield className="h-3 w-3" /> Secure checkout · PayFast, card & EFT
               </p>
             </div>
           </aside>
         </section>
       </main>
+
       <Footer />
     </div>
   );
