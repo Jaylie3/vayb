@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { events } from "@/data/events";
 import { EventCard } from "./EventCard";
 import { Categories } from "./Categories";
-import { Flame } from "lucide-react";
+import { Icon } from "./Icon";
 
 export const FeaturedEvents = () => {
   const [filter, setFilter] = useState<string | null>(null);
