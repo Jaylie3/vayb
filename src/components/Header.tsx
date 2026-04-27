@@ -88,7 +88,8 @@ export const Header = () => {
             <Link to="/" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-muted">Discover</Link>
             <a href="/#categories" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-muted">Categories</a>
             <a href="/#organisers" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-muted">For organisers</a>
-            <Button variant="hero" className="mt-2 w-full">Get tickets</Button>
+            <button onClick={handleSignIn} className="rounded-xl px-3 py-2 text-left text-sm font-medium hover:bg-muted">Sign in</button>
+            <Button onClick={handleGetTickets} variant="hero" className="mt-2 w-full">Get tickets</Button>
           </div>
         </nav>
       )}
