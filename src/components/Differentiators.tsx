@@ -1,26 +1,10 @@
-import { Zap, MessageCircle, PiggyBank, Compass } from "lucide-react";
+import { Icon, type IconName } from "./Icon";
 
-const items = [
-  {
-    icon: Zap,
-    title: "Same-day payouts",
-    body: "Funds in your account the day fans buy. No 7-day waits.",
-  },
-  {
-    icon: MessageCircle,
-    title: "WhatsApp tickets",
-    body: "Tickets delivered to the app every South African already uses.",
-  },
-  {
-    icon: PiggyBank,
-    title: "Lower buyer fees",
-    body: "A flat 3% to fans. 0% to organisers. Honest pricing, finally.",
-  },
-  {
-    icon: Compass,
-    title: "Built for discovery",
-    body: "Curated by city, mood and moment — not buried in a list.",
-  },
+const items: { icon: IconName; title: string; body: string }[] = [
+  { icon: "flash", title: "Same-day payouts", body: "Funds in your account the day fans buy. No 7-day waits." },
+  { icon: "whatsapp", title: "WhatsApp tickets", body: "Tickets delivered to the app every South African already uses." },
+  { icon: "piggy", title: "Lower buyer fees", body: "A flat 3% to fans. 0% to organisers. Honest pricing, finally." },
+  { icon: "compass", title: "Built for discovery", body: "Curated by city, mood and moment — not buried in a list." },
 ];
 
 export const Differentiators = () => (
@@ -40,7 +24,7 @@ export const Differentiators = () => (
             style={{ animationDelay: `${i * 80}ms` }}
           >
             <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-sunset text-white shadow-glow">
-              <it.icon className="h-5 w-5" />
+              <Icon name={it.icon} className="h-6 w-6" />
             </div>
             <h3 className="font-display text-lg font-semibold">{it.title}</h3>
             <p className="mt-1.5 text-sm text-muted-foreground">{it.body}</p>

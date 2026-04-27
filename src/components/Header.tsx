@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
+import { Icon } from "./Icon";
 import { cn } from "@/lib/utils";
 
 export const Header = ({ overlay = false }: { overlay?: boolean }) => {
@@ -67,7 +67,7 @@ export const Header = ({ overlay = false }: { overlay?: boolean }) => {
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <Icon name={open ? "close" : "menu"} className="h-5 w-5" />
           </Button>
         </div>
       </div>

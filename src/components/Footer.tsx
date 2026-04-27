@@ -1,5 +1,5 @@
 import { Logo } from "./Logo";
-import { Instagram, Twitter, Music2 } from "lucide-react";
+import { Icon } from "./Icon";
 
 export const Footer = () => (
   <footer className="border-t border-border/60 bg-muted/40">
@@ -10,41 +10,30 @@ export const Footer = () => (
           South Africa's mobile-first ticketing platform. Tickets to WhatsApp, lower fees, same-day payouts.
         </p>
         <div className="flex items-center gap-3">
-          {[Instagram, Twitter, Music2].map((Icon, i) => (
+          {(["whatsapp", "message", "music"] as const).map((n) => (
             <a
-              key={i}
+              key={n}
               href="#"
               aria-label="Social link"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-smooth hover:border-primary hover:text-primary"
             >
-              <Icon className="h-4 w-4" />
+              <Icon name={n} className="h-4 w-4" />
             </a>
           ))}
         </div>
       </div>
 
       {[
-        {
-          title: "Discover",
-          links: ["Trending", "Music", "Festivals", "Sports", "Comedy", "Markets"],
-        },
-        {
-          title: "Organisers",
-          links: ["List your event", "Pricing", "Same-day payouts", "WhatsApp delivery", "Scan-in app"],
-        },
-        {
-          title: "Support",
-          links: ["Help centre", "Contact", "Refund policy", "Terms", "Privacy"],
-        },
+        { title: "Discover", links: ["Trending", "Music", "Festivals", "Sports", "Comedy", "Markets"] },
+        { title: "Organisers", links: ["List your event", "Pricing", "Same-day payouts", "WhatsApp delivery", "Scan-in app"] },
+        { title: "Support", links: ["Help centre", "Contact", "Refund policy", "Terms", "Privacy"] },
       ].map((col) => (
         <div key={col.title}>
           <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-foreground/70">{col.title}</h4>
           <ul className="space-y-2.5">
             {col.links.map((l) => (
               <li key={l}>
-                <a href="#" className="text-sm text-muted-foreground transition-smooth hover:text-foreground">
-                  {l}
-                </a>
+                <a href="#" className="text-sm text-muted-foreground transition-smooth hover:text-foreground">{l}</a>
               </li>
             ))}
           </ul>
