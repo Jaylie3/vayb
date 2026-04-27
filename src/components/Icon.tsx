@@ -24,6 +24,13 @@ import {
   mdilChevronDown,
   mdilClipboardCheck,
   mdilArrangeSendBackward,
+  mdilMicrophone,
+  mdilTrophy,
+  mdilCart,
+  mdilBriefcase,
+  mdilFlag,
+  mdilGift,
+  mdilCurrencyUsd,
 } from "@mdi/light-js";
 import { cn } from "@/lib/utils";
 
