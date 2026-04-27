@@ -1,16 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
 import { Icon } from "./Icon";
 import { cn } from "@/lib/utils";
 import { useChrome } from "@/layouts/ChromeContext";
+import { toast } from "sonner";
 
 /** Global app header. Visual mode is derived from {@link useChrome}:
  *  while a hero is in view → transparent on dark; otherwise → solid + bordered. */
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const { transparent } = useChrome();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSignIn = () => {
+    setOpen(false);
+    toast.info("Sign in is coming soon", {
+      description: "Accounts launch alongside saved events and ticket history.",
+    });
+  };
+
+  const handleGetTickets = () => {
+    setOpen(false);
+    if (location.pathname === "/") {
+      document.getElementById("featured")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      navigate("/#featured");
+    }
+  };
 
   return (
     <header
@@ -45,10 +64,10 @@ export const Header = () => {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Button variant={transparent ? "glass" : "ghost"} size="sm" className="hidden sm:inline-flex">
+          <Button onClick={handleSignIn} variant={transparent ? "glass" : "ghost"} size="sm" className="hidden sm:inline-flex">
             Sign in
           </Button>
-          <Button variant="hero" size="sm" className="hidden sm:inline-flex">
+          <Button onClick={handleGetTickets} variant="hero" size="sm" className="hidden sm:inline-flex">
             Get tickets
           </Button>
           <Button
