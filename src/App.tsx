@@ -6,10 +6,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import RootLayout from "./layouts/RootLayout";
 import NotFound from "./pages/NotFound";
+import { AuthProvider } from "./auth/AuthProvider";
 
 const Index = lazy(() => import("./pages/Index"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
 const Checkout = lazy(() => import("./pages/Checkout"));
+const Auth = lazy(() => import("./pages/Auth"));
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Index /> },
       { path: "/events/:id", element: <EventDetail /> },
       { path: "/checkout/:id", element: <Checkout /> },
+      { path: "/auth", element: <Auth /> },
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -27,11 +30,13 @@ const router = createBrowserRouter([
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <RouterProvider router={router} />
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <RouterProvider router={router} />
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
