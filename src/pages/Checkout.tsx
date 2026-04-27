@@ -1,6 +1,6 @@
+import { Icon } from "@/components/Icon";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Calendar, Check, CreditCard, Landmark, MapPin, MessageCircle, ShieldCheck, Sparkles, Ticket } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -86,7 +86,7 @@ const Checkout = () => {
                       !active && !done && "bg-muted text-muted-foreground",
                     )}
                   >
-                    {done ? <Check className="h-4 w-4" /> : i + 1}
+                    {done ? <Icon name="check" className="h-4 w-4" /> : i + 1}
                   </div>
                   <span className={cn("text-sm font-medium capitalize", active ? "text-foreground" : "text-muted-foreground")}>
                     {s}
@@ -121,7 +121,7 @@ const Checkout = () => {
                     </div>
                     <div>
                       <Label htmlFor="whatsapp" className="flex items-center gap-1.5">
-                        <MessageCircle className="h-3.5 w-3.5 text-whatsapp" /> WhatsApp number
+                        <Icon name="whatsapp" className="h-3.5 w-3.5 text-whatsapp" /> WhatsApp number
                       </Label>
                       <Input
                         id="whatsapp"
@@ -141,7 +141,7 @@ const Checkout = () => {
                   </div>
 
                   <Button type="submit" variant="hero" size="lg" className="w-full">
-                    Continue to payment <ArrowRight className="h-4 w-4" />
+                    Continue to payment <Icon name="arrow-right" className="h-4 w-4" />
                   </Button>
                 </form>
               ) : (
@@ -162,9 +162,9 @@ const Checkout = () => {
 
                   <div className="grid gap-3 sm:grid-cols-3">
                     {[
-                      { id: "card" as Method, label: "Card", icon: CreditCard, sub: "Visa · Mastercard" },
-                      { id: "payfast" as Method, label: "PayFast", icon: Sparkles, sub: "Instant EFT" },
-                      { id: "eft" as Method, label: "EFT", icon: Landmark, sub: "Manual transfer" },
+                      { id: "card" as Method, label: "Card", icon: "card" as const, sub: "Visa · Mastercard" },
+                      { id: "payfast" as Method, label: "PayFast", icon: "sparkles" as const, sub: "Instant EFT" },
+                      { id: "eft" as Method, label: "EFT", icon: "bank" as const, sub: "Manual transfer" },
                     ].map((m) => {
                       const active = method === m.id;
                       return (
@@ -219,7 +219,7 @@ const Checkout = () => {
                     {loading ? "Processing…" : `Pay ${formatZAR(total)}`}
                   </Button>
                   <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-                    <ShieldCheck className="h-3 w-3" /> 256-bit encrypted · No card details stored
+                    <Icon name="shield-check" className="h-3 w-3" /> 256-bit encrypted · No card details stored
                   </p>
                 </form>
               )}
@@ -248,11 +248,11 @@ const OrderSummary = ({ event, tier, qty, subtotal, fee, total, d }: any) => (
       </div>
       <div className="space-y-4 p-5">
         <div className="space-y-1.5 text-sm">
-          <p className="flex items-center gap-2 text-muted-foreground"><Calendar className="h-3.5 w-3.5" /> {d.full} · {d.time}</p>
-          <p className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-3.5 w-3.5" /> {event.venue}, {event.city}</p>
+          <p className="flex items-center gap-2 text-muted-foreground"><Icon name="calendar" className="h-3.5 w-3.5" /> {d.full} · {d.time}</p>
+          <p className="flex items-center gap-2 text-muted-foreground"><Icon name="map-pin" className="h-3.5 w-3.5" /> {event.venue}, {event.city}</p>
         </div>
         <div className="rounded-2xl border border-border bg-background p-4">
-          <p className="flex items-center gap-2 text-sm font-semibold"><Ticket className="h-4 w-4 text-primary" /> {qty} × {tier.name}</p>
+          <p className="flex items-center gap-2 text-sm font-semibold"><Icon name="ticket" className="h-4 w-4 text-primary" /> {qty} × {tier.name}</p>
           <ul className="mt-2 space-y-0.5 text-xs text-muted-foreground">
             {tier.perks.map((p: string) => <li key={p}>· {p}</li>)}
           </ul>
@@ -273,7 +273,7 @@ const OrderSummary = ({ event, tier, qty, subtotal, fee, total, d }: any) => (
 const SuccessPanel = ({ event, tier, qty, total, whatsapp, d }: any) => (
   <div className="mx-auto max-w-2xl text-center">
     <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-sunset shadow-glow">
-      <Check className="h-9 w-9 text-white" />
+      <Icon name="check" className="h-9 w-9 text-white" />
       <span className="absolute inset-0 animate-pulse-glow rounded-full bg-gradient-sunset opacity-50 blur-xl" aria-hidden />
     </div>
     <h1 className="mt-6 font-display text-4xl font-bold sm:text-5xl">You're in! 🎉</h1>
@@ -301,10 +301,10 @@ const SuccessPanel = ({ event, tier, qty, total, whatsapp, d }: any) => (
 
     <div className="mt-8 flex flex-wrap justify-center gap-3">
       <Button asChild variant="hero" size="lg">
-        <Link to="/">Browse more events <ArrowRight className="h-4 w-4" /></Link>
+        <Link to="/">Browse more events <Icon name="arrow-right" className="h-4 w-4" /></Link>
       </Button>
       <Button asChild variant="outline" size="lg">
-        <Link to={`/events/${event.id}`}><ArrowLeft className="h-4 w-4" /> Back to event</Link>
+        <Link to={`/events/${event.id}`}><Icon name="arrow-left" className="h-4 w-4" /> Back to event</Link>
       </Button>
     </div>
   </div>

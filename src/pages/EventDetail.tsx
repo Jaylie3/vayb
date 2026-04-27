@@ -1,6 +1,6 @@
+import { Icon } from "@/components/Icon";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
-import { ArrowLeft, Calendar, Clock, MapPin, MessageCircle, Minus, Plus, Share2, Shield, Ticket } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,7 @@ const EventDetail = () => {
               to="/"
               className="mb-5 inline-flex w-fit items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium hover:bg-white/20"
             >
-              <ArrowLeft className="h-3.5 w-3.5" /> Back to discover
+              <Icon name="arrow-left" className="h-3.5 w-3.5" /> Back to discover
             </Link>
             {cat && (
               <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full glass-dark px-3 py-1 text-xs font-medium">
@@ -74,13 +74,13 @@ const EventDetail = () => {
           <div className="space-y-10">
             <div className="grid gap-3 sm:grid-cols-3">
               {[
-                { icon: Calendar, label: "Date", value: d.full, sub: d.time },
-                { icon: Clock, label: "Doors", value: event.doorsTime ?? d.time, sub: "Local time" },
-                { icon: MapPin, label: "Venue", value: event.venue, sub: event.city },
+                { icon: "calendar" as const, label: "Date", value: d.full, sub: d.time },
+                { icon: "clock" as const, label: "Doors", value: event.doorsTime ?? d.time, sub: "Local time" },
+                { icon: "map-pin" as const, label: "Venue", value: event.venue, sub: event.city },
               ].map((card) => (
                 <div key={card.label} className="rounded-2xl border border-border bg-card p-5 shadow-card">
                   <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-sunset text-white shadow-glow">
-                    <card.icon className="h-4 w-4" />
+                    <Icon name={card.icon} className="h-4 w-4" />
                   </div>
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{card.label}</p>
                   <p className="mt-1 font-display text-base font-semibold leading-tight">{card.value}</p>
@@ -96,7 +96,7 @@ const EventDetail = () => {
 
             <div className="flex items-start gap-4 rounded-2xl border border-whatsapp/30 bg-whatsapp/10 p-5">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-whatsapp-foreground shadow-card">
-                <MessageCircle className="h-5 w-5" />
+                <Icon name="whatsapp" className="h-5 w-5" />
               </div>
               <div>
                 <p className="font-display font-semibold">Tickets delivered to WhatsApp</p>
@@ -109,7 +109,7 @@ const EventDetail = () => {
             <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
               <span className="text-sm font-medium">Share this event</span>
               <Button variant="outline" size="sm" onClick={onShare}>
-                <Share2 className="h-4 w-4" /> Share
+                <Icon name="share" className="h-4 w-4" /> Share
               </Button>
             </div>
           </div>
@@ -118,7 +118,7 @@ const EventDetail = () => {
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <div className="rounded-3xl border border-border bg-gradient-card p-6 shadow-pop">
               <div className="mb-4 flex items-center gap-2">
-                <Ticket className="h-4 w-4 text-primary" />
+                <Icon name="ticket" className="h-4 w-4 text-primary" />
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Choose your ticket</p>
               </div>
 
@@ -172,7 +172,7 @@ const EventDetail = () => {
                     aria-label="Decrease quantity"
                     disabled={qty <= 1}
                   >
-                    <Minus className="h-3.5 w-3.5" />
+                    <Icon name="minus" className="h-3.5 w-3.5" />
                   </Button>
                   <span className="w-6 text-center font-display text-base font-semibold">{qty}</span>
                   <Button
@@ -183,7 +183,7 @@ const EventDetail = () => {
                     aria-label="Increase quantity"
                     disabled={qty >= 10}
                   >
-                    <Plus className="h-3.5 w-3.5" />
+                    <Icon name="plus" className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               </div>
@@ -208,7 +208,7 @@ const EventDetail = () => {
                 Get tickets · {formatZAR(total)}
               </Button>
               <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-                <Shield className="h-3 w-3" /> Secure checkout · PayFast, card & EFT
+                <Icon name="shield" className="h-3 w-3" /> Secure checkout · PayFast, card & EFT
               </p>
             </div>
           </aside>
