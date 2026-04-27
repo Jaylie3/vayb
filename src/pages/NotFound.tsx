@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/Icon";
 
 const NotFound = () => (
   <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-dark px-5 text-white">
@@ -9,7 +9,7 @@ const NotFound = () => (
 
     <div className="relative max-w-lg text-center">
       <div className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-sunset shadow-glow">
-        <Sparkles className="h-7 w-7 text-white" />
+        <Icon name="sparkles" className="h-8 w-8 text-white" />
       </div>
       <h1 className="mt-6 font-display text-5xl font-bold sm:text-6xl">
         This <span className="text-gradient-sunset">vayb</span> doesn't exist.

@@ -24,7 +24,7 @@ export const FeaturedEvents = () => {
             <div className="mb-7 flex items-end justify-between">
               <div>
                 <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-secondary">
-                  <Flame className="h-3.5 w-3.5" /> Trending this week
+                  <Icon name="trending" className="h-3.5 w-3.5" /> Trending this week
                 </p>
                 <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">Selling fast</h2>
               </div>
