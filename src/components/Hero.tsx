@@ -87,9 +87,9 @@ export const Hero = () => {
           </form>
 
           <div className="mt-8 flex animate-fade-up flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/75 delay-300">
-            <span className="inline-flex items-center gap-2">⚡ Same-day payouts</span>
-            <span className="inline-flex items-center gap-2">💬 WhatsApp ticketing</span>
-            <span className="inline-flex items-center gap-2">💸 Lowest buyer fees in SA</span>
+            <span className="inline-flex items-center gap-2"><Icon name="flash" className="h-4 w-4 text-primary-glow" /> Same-day payouts</span>
+            <span className="inline-flex items-center gap-2"><Icon name="whatsapp" className="h-4 w-4 text-whatsapp" /> WhatsApp ticketing</span>
+            <span className="inline-flex items-center gap-2"><Icon name="currency" className="h-4 w-4 text-primary-glow" /> Lowest buyer fees in SA</span>
           </div>
         </div>
       </div>

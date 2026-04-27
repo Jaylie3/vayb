@@ -30,12 +30,12 @@ export type Event = {
 };
 
 export const categories = [
-  { slug: "music", label: "Music", emoji: "🎶" },
-  { slug: "festivals", label: "Festivals", emoji: "🎪" },
-  { slug: "sports", label: "Sports", emoji: "🏟️" },
-  { slug: "comedy", label: "Comedy", emoji: "🎤" },
-  { slug: "food", label: "Food & Markets", emoji: "🍽️" },
-  { slug: "conferences", label: "Conferences", emoji: "💼" },
+  { slug: "music", label: "Music", icon: "music" as const },
+  { slug: "festivals", label: "Festivals", icon: "star" as const },
+  { slug: "sports", label: "Sports", icon: "trophy" as const },
+  { slug: "comedy", label: "Comedy", icon: "microphone" as const },
+  { slug: "food", label: "Food & Markets", icon: "cart" as const },
+  { slug: "conferences", label: "Conferences", icon: "briefcase" as const },
 ];
 
 export const cities = ["All cities", "Cape Town", "Johannesburg", "Durban", "Pretoria"];
