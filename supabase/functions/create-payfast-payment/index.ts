@@ -84,9 +84,9 @@ Deno.serve(async (req) => {
       amount: amountStr,
       item_name: `${payload.eventTitle} - ${payload.quantity} x ${payload.tierName}`.replace(/[^\x20-\x7E]/g, "").slice(0, 100),
       item_description: `Tickets for ${payload.eventTitle}`.replace(/[^\x20-\x7E]/g, "").slice(0, 255),
+      custom_int1: String(payload.quantity),
       custom_str1: payload.eventId,
       custom_str2: payload.tierName,
-      custom_int1: String(payload.quantity),
     };
 
     // Drop empty optional fields so signature & submitted params match exactly.
@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
       if (v !== undefined && v !== null && String(v).trim() !== "") cleaned[k] = String(v).trim();
     }
 
-    const signature = await generateSignature(cleaned, passphrase);
+    const signature = await generateSignature(cleaned, passphrase.trim());
 
     // Build query string using the SAME encoding used to sign, to guarantee match.
     const queryParts = Object.entries(cleaned).map(([k, v]) => `${k}=${encodeForSignature(v)}`);
