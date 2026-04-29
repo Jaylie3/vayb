@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { ThemeToggle } from "./ThemeToggle";
 
 const initials = (s: string) => {
   const parts = s.trim().split(/[\s@.]+/).filter(Boolean);
@@ -88,6 +89,7 @@ export const Header = () => {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
