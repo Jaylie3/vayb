@@ -12,6 +12,7 @@ const Index = lazy(() => import("./pages/Index"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const Auth = lazy(() => import("./pages/Auth"));
+const Tickets = lazy(() => import("./pages/Tickets"));
 
 const queryClient = new QueryClient();
 
