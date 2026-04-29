@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import RootLayout from "./layouts/RootLayout";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./auth/AuthProvider";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const Index = lazy(() => import("./pages/Index"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
@@ -32,13 +33,15 @@ const router = createBrowserRouter([
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <RouterProvider router={router} />
-      </TooltipProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <RouterProvider router={router} />
+        </TooltipProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
