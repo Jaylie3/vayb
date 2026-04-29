@@ -495,10 +495,60 @@ const OrderSummary = ({
 };
 
 const SuccessPanel = ({
-  event, tier, qty, total, whatsapp, name,
-}: { event: Event; tier: TicketTier; qty: number; total: number; whatsapp: string; name: string }) => {
+  event, tier, qty, total, whatsapp, name, paymentId,
+}: { event: Event; tier: TicketTier; qty: number; total: number; whatsapp: string; name: string; paymentId: string | null }) => {
   const d = formatEventDate(event.date);
-  const cells = useMemo(() => mockQR(event.id), [event.id]);
+  const [ticket, setTicket] = useState<DeliveredTicket | null>(null);
+  const [syncing, setSyncing] = useState(Boolean(paymentId));
+  const qrSeed = ticket?.qr_code ?? event.id;
+  const cells = useMemo(() => mockQR(qrSeed), [qrSeed]);
+
+  useEffect(() => {
+    if (!paymentId) {
+      setSyncing(false);
+      return;
+    }
+
+    let cancelled = false;
+    let attempts = 0;
+    const ticketsClient = supabase as unknown as {
+      from: (table: "tickets") => {
+        select: (columns: string) => {
+          eq: (column: string, value: string) => { maybeSingle: () => Promise<{ data: DeliveredTicket | null; error: unknown }> };
+        };
+      };
+    };
+
+    const pollForTicket = async () => {
+      while (!cancelled && attempts < 12) {
+        attempts += 1;
+        const { data } = await ticketsClient
+          .from("tickets")
+          .select("id,event_title,tier_name,quantity,total,status,qr_code,buyer_name,buyer_phone")
+          .eq("payment_id", paymentId)
+          .maybeSingle();
+
+        if (data) setTicket(data);
+        if (data?.status === "paid") {
+          setSyncing(false);
+          toast.success("Ticket ready", { description: "Your QR ticket is now available in My Tickets." });
+          return;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+
+      if (!cancelled) setSyncing(false);
+    };
+
+    pollForTicket();
+    return () => { cancelled = true; };
+  }, [paymentId]);
+
+  const displayName = ticket?.buyer_name || name;
+  const displayWhatsapp = ticket?.buyer_phone || whatsapp;
+  const displayTier = ticket ? `${ticket.quantity} × ${ticket.tier_name}` : `${qty} × ${tier.name}`;
+  const displayTotal = ticket?.total ?? total;
   return (
     <div className="mx-auto max-w-2xl animate-fade-up text-center">
       <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-sunset shadow-glow">
