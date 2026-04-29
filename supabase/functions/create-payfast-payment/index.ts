@@ -18,8 +18,16 @@ interface PaymentPayload {
 }
 
 function encodeForSignature(value: string): string {
-  // PayFast spec: application/x-www-form-urlencoded with %20 for spaces and uppercase hex.
-  return encodeURIComponent(value).replace(/%[0-9a-f]{2}/g, (m) => m.toUpperCase()).replace(/%20/g, "+");
+  // Match PHP urlencode() exactly: spaces => '+', uppercase hex,
+  // and encode characters encodeURIComponent leaves alone (! ' ( ) *).
+  return encodeURIComponent(value)
+    .replace(/%[0-9a-f]{2}/g, (m) => m.toUpperCase())
+    .replace(/%20/g, "+")
+    .replace(/!/g, "%21")
+    .replace(/'/g, "%27")
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29")
+    .replace(/\*/g, "%2A");
 }
 
 async function md5Hex(input: string): Promise<string> {
