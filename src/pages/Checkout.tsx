@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,18 @@ import { supabase } from "@/integrations/supabase/client";
 
 type CheckoutStep = "details" | "payment" | "success";
 type PaymentMethod = "card" | "payfast" | "eft";
+
+type DeliveredTicket = {
+  id: string;
+  event_title: string;
+  tier_name: string;
+  quantity: number;
+  total: number;
+  status: "pending" | "paid" | "cancelled" | "refunded";
+  qr_code: string;
+  buyer_name: string | null;
+  buyer_phone: string | null;
+};
 
 type CheckoutState = {
   step: CheckoutStep;
@@ -128,6 +140,7 @@ const Checkout = () => {
   const discount = s.promoApplied ? Math.round(subtotal * 0.1) : 0;
   const fee = calcBookingFee(qty);
   const total = subtotal - discount + fee;
+  const paymentId = params.get("payment_id");
 
   const errors = validate(s);
   const showError = (k: "name" | "email" | "whatsapp") => (s.touched[k] || s.attempted) ? errors[k] : null;
@@ -248,7 +261,7 @@ const Checkout = () => {
       )}
 
       {s.step === "success" ? (
-        <SuccessPanel event={event} tier={tier} qty={qty} total={total} whatsapp={s.whatsapp || "+27 ••• •••• "} name={s.name || "You"} />
+        <SuccessPanel event={event} tier={tier} qty={qty} total={total} whatsapp={s.whatsapp || "+27 ••• •••• "} name={s.name || "You"} paymentId={paymentId} />
       ) : (
         <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
           <div className="order-2 lg:order-1">
