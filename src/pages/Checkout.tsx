@@ -201,6 +201,7 @@ const Checkout = () => {
       const form = document.createElement("form");
       form.method = "POST";
       form.action = data.actionUrl;
+      form.target = "_top";
       for (const [k, v] of Object.entries(data.fields as Record<string, string>)) {
         const input = document.createElement("input");
         input.type = "hidden";
