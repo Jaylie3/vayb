@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,18 @@ import { supabase } from "@/integrations/supabase/client";
 
 type CheckoutStep = "details" | "payment" | "success";
 type PaymentMethod = "card" | "payfast" | "eft";
+
+type DeliveredTicket = {
+  id: string;
+  event_title: string;
+  tier_name: string;
+  quantity: number;
+  total: number;
+  status: "pending" | "paid" | "cancelled" | "refunded";
+  qr_code: string;
+  buyer_name: string | null;
+  buyer_phone: string | null;
+};
 
 type CheckoutState = {
   step: CheckoutStep;
@@ -128,6 +140,7 @@ const Checkout = () => {
   const discount = s.promoApplied ? Math.round(subtotal * 0.1) : 0;
   const fee = calcBookingFee(qty);
   const total = subtotal - discount + fee;
+  const paymentId = params.get("payment_id");
 
   const errors = validate(s);
   const showError = (k: "name" | "email" | "whatsapp") => (s.touched[k] || s.attempted) ? errors[k] : null;
@@ -148,7 +161,7 @@ const Checkout = () => {
   useEffect(() => {
     if (params.get("status") === "success") {
       dispatch({ type: "go", step: "success" });
-      toast.success("Payment confirmed", { description: "Your ticket is on its way." });
+        toast.success("Payment confirmed", { description: "Your ticket will appear in My Tickets." });
     } else if (params.get("status") === "cancelled") {
       toast.error("Payment cancelled", { description: "You can try again whenever you're ready." });
     }
@@ -166,7 +179,7 @@ const Checkout = () => {
         dispatch({ type: "processing", value: false });
         dispatch({ type: "go", step: "success" });
         window.scrollTo({ top: 0, behavior: "smooth" });
-        toast.success("Payment confirmed", { description: "Your ticket is on its way to WhatsApp." });
+        toast.success("Payment confirmed", { description: "Your ticket will appear in My Tickets." });
       }, 1800);
       return;
     }
@@ -248,7 +261,7 @@ const Checkout = () => {
       )}
 
       {s.step === "success" ? (
-        <SuccessPanel event={event} tier={tier} qty={qty} total={total} whatsapp={s.whatsapp || "+27 ••• •••• "} name={s.name || "You"} />
+        <SuccessPanel event={event} tier={tier} qty={qty} total={total} whatsapp={s.whatsapp || "+27 ••• •••• "} name={s.name || "You"} paymentId={paymentId} />
       ) : (
         <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
           <div className="order-2 lg:order-1">
@@ -256,7 +269,7 @@ const Checkout = () => {
               <form onSubmit={submitDetails} noValidate className="space-y-6 rounded-3xl border border-border bg-card p-6 shadow-card sm:p-8">
                 <div>
                   <h2 className="font-display text-2xl font-bold">Your details</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">We'll send your tickets to your WhatsApp.</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Paid QR tickets appear in My Tickets after payment confirmation.</p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -290,7 +303,7 @@ const Checkout = () => {
                   <div>
                     <Label htmlFor="whatsapp" className="flex items-center gap-1.5">
                       <Icon name="whatsapp" className="h-3.5 w-3.5 text-whatsapp" aria-hidden />
-                      Your QR ticket will be sent here
+                      Phone number for your ticket
                     </Label>
                     <Input
                       id="whatsapp"
@@ -482,10 +495,60 @@ const OrderSummary = ({
 };
 
 const SuccessPanel = ({
-  event, tier, qty, total, whatsapp, name,
-}: { event: Event; tier: TicketTier; qty: number; total: number; whatsapp: string; name: string }) => {
+  event, tier, qty, total, whatsapp, name, paymentId,
+}: { event: Event; tier: TicketTier; qty: number; total: number; whatsapp: string; name: string; paymentId: string | null }) => {
   const d = formatEventDate(event.date);
-  const cells = useMemo(() => mockQR(event.id), [event.id]);
+  const [ticket, setTicket] = useState<DeliveredTicket | null>(null);
+  const [syncing, setSyncing] = useState(Boolean(paymentId));
+  const qrSeed = ticket?.qr_code ?? event.id;
+  const cells = useMemo(() => mockQR(qrSeed), [qrSeed]);
+
+  useEffect(() => {
+    if (!paymentId) {
+      setSyncing(false);
+      return;
+    }
+
+    let cancelled = false;
+    let attempts = 0;
+    const ticketsClient = supabase as unknown as {
+      from: (table: "tickets") => {
+        select: (columns: string) => {
+          eq: (column: string, value: string) => { maybeSingle: () => Promise<{ data: DeliveredTicket | null; error: unknown }> };
+        };
+      };
+    };
+
+    const pollForTicket = async () => {
+      while (!cancelled && attempts < 12) {
+        attempts += 1;
+        const { data } = await ticketsClient
+          .from("tickets")
+          .select("id,event_title,tier_name,quantity,total,status,qr_code,buyer_name,buyer_phone")
+          .eq("payment_id", paymentId)
+          .maybeSingle();
+
+        if (data) setTicket(data);
+        if (data?.status === "paid") {
+          setSyncing(false);
+          toast.success("Ticket ready", { description: "Your QR ticket is now available in My Tickets." });
+          return;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+
+      if (!cancelled) setSyncing(false);
+    };
+
+    pollForTicket();
+    return () => { cancelled = true; };
+  }, [paymentId]);
+
+  const displayName = ticket?.buyer_name || name;
+  const displayWhatsapp = ticket?.buyer_phone || whatsapp;
+  const displayTier = ticket ? `${ticket.quantity} × ${ticket.tier_name}` : `${qty} × ${tier.name}`;
+  const displayTotal = ticket?.total ?? total;
   return (
     <div className="mx-auto max-w-2xl animate-fade-up text-center">
       <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-sunset shadow-glow">
@@ -496,7 +559,7 @@ const SuccessPanel = ({
         You're in! <Icon name="gift" className="h-9 w-9 text-primary" aria-hidden />
       </h1>
       <p className="mt-3 text-muted-foreground">
-        We've sent your QR ticket to WhatsApp <span className="font-semibold text-foreground">{whatsapp}</span>.
+        {syncing ? "We're confirming your payment and preparing your QR ticket." : "Your QR ticket is ready."} <span className="font-semibold text-foreground">{displayWhatsapp}</span>
       </p>
 
       <div className="mx-auto mt-8 overflow-hidden rounded-3xl border border-border bg-gradient-card text-left shadow-pop">
@@ -517,10 +580,11 @@ const SuccessPanel = ({
             ))}
           </div>
           <div className="space-y-1.5 text-sm">
-            <p><span className="text-muted-foreground">Holder:</span> <span className="font-semibold">{name}</span></p>
-            <p><span className="text-muted-foreground">Tier:</span> <span className="font-semibold">{qty} × {tier.name}</span></p>
+            <p><span className="text-muted-foreground">Holder:</span> <span className="font-semibold">{displayName}</span></p>
+            <p><span className="text-muted-foreground">Tier:</span> <span className="font-semibold">{displayTier}</span></p>
             <p><span className="text-muted-foreground">Venue:</span> <span className="font-semibold">{event.venue}, {event.city}</span></p>
-            <p><span className="text-muted-foreground">Total paid:</span> <span className="font-semibold text-gradient-sunset">{formatZAR(total)}</span></p>
+            <p><span className="text-muted-foreground">Total paid:</span> <span className="font-semibold text-gradient-sunset">{formatZAR(displayTotal)}</span></p>
+            {syncing && <p className="text-xs text-muted-foreground">Payment confirmation can take a few seconds.</p>}
           </div>
         </div>
       </div>
