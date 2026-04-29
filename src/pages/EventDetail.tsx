@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { TicketSelector } from "@/components/TicketSelector";
 import { HeroSentinel } from "@/components/HeroSentinel";
 import { categories } from "@/data/events";
-import { formatEventDate, formatZAR, getEvent, BUYER_FEE_RATE } from "@/lib/events";
+import { formatEventDate, formatZAR, getEvent, calcBookingFee } from "@/lib/events";
 import NotFound from "./NotFound";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
