@@ -161,7 +161,7 @@ const Checkout = () => {
   useEffect(() => {
     if (params.get("status") === "success") {
       dispatch({ type: "go", step: "success" });
-      toast.success("Payment confirmed", { description: "Your ticket is on its way." });
+        toast.success("Payment confirmed", { description: "Your ticket will appear in My Tickets." });
     } else if (params.get("status") === "cancelled") {
       toast.error("Payment cancelled", { description: "You can try again whenever you're ready." });
     }
@@ -179,7 +179,7 @@ const Checkout = () => {
         dispatch({ type: "processing", value: false });
         dispatch({ type: "go", step: "success" });
         window.scrollTo({ top: 0, behavior: "smooth" });
-        toast.success("Payment confirmed", { description: "Your ticket is on its way to WhatsApp." });
+        toast.success("Payment confirmed", { description: "Your ticket will appear in My Tickets." });
       }, 1800);
       return;
     }
@@ -269,7 +269,7 @@ const Checkout = () => {
               <form onSubmit={submitDetails} noValidate className="space-y-6 rounded-3xl border border-border bg-card p-6 shadow-card sm:p-8">
                 <div>
                   <h2 className="font-display text-2xl font-bold">Your details</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">We'll send your tickets to your WhatsApp.</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Paid QR tickets appear in My Tickets after payment confirmation.</p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -303,7 +303,7 @@ const Checkout = () => {
                   <div>
                     <Label htmlFor="whatsapp" className="flex items-center gap-1.5">
                       <Icon name="whatsapp" className="h-3.5 w-3.5 text-whatsapp" aria-hidden />
-                      Your QR ticket will be sent here
+                      Phone number for your ticket
                     </Label>
                     <Input
                       id="whatsapp"
