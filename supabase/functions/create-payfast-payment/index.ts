@@ -1,5 +1,6 @@
-// PayFast (sandbox) checkout URL generator.
-// Builds a signed payment URL the client redirects to.
+// PayFast checkout form generator.
+// Builds signed form fields and creates a pending ticket record before redirecting.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.95.0";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 
 const PAYFAST_HOST = "https://www.payfast.co.za";
@@ -51,6 +52,12 @@ async function generateSignature(data: Record<string, string>, passphrase?: stri
   return await md5Hex(str);
 }
 
+function appendQuery(url: string, values: Record<string, string>): string {
+  const next = new URL(url);
+  for (const [key, value] of Object.entries(values)) next.searchParams.set(key, value);
+  return next.toString();
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -58,8 +65,10 @@ Deno.serve(async (req) => {
     const merchantId = Deno.env.get("PAYFAST_MERCHANT_ID");
     const merchantKey = Deno.env.get("PAYFAST_MERCHANT_KEY");
     const passphrase = Deno.env.get("PAYFAST_PASSPHRASE") ?? "";
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!merchantId || !merchantKey) {
+    if (!merchantId || !merchantKey || !supabaseUrl || !serviceRoleKey) {
       return new Response(JSON.stringify({ error: "PayFast credentials not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -74,15 +83,37 @@ Deno.serve(async (req) => {
       });
     }
 
-    const m_payment_id = `${payload.eventId}-${Date.now()}`;
+    const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+    const { data: authData } = token ? await supabaseAdmin.auth.getUser(token) : { data: { user: null } };
+
+    const m_payment_id = `pf-${crypto.randomUUID()}`;
     const amountStr = payload.amount.toFixed(2);
+    const returnUrl = appendQuery(payload.returnUrl, { payment_id: m_payment_id });
+    const cancelUrl = appendQuery(payload.cancelUrl, { payment_id: m_payment_id });
+
+    const { error: ticketError } = await supabaseAdmin.from("tickets").upsert({
+      user_id: authData.user?.id ?? null,
+      buyer_email: payload.buyer.email.trim().toLowerCase(),
+      buyer_name: payload.buyer.name.trim(),
+      buyer_phone: payload.buyer.whatsapp?.trim() || null,
+      event_slug: payload.eventId,
+      event_title: payload.eventTitle,
+      tier_name: payload.tierName,
+      quantity: Math.max(1, Math.floor(payload.quantity)),
+      total: Math.round(payload.amount),
+      payment_id: m_payment_id,
+      status: "pending",
+    }, { onConflict: "payment_id" });
+
+    if (ticketError) throw ticketError;
 
     // Order matters for the signature.
     const data: Record<string, string> = {
       merchant_id: merchantId,
       merchant_key: merchantKey,
-      return_url: payload.returnUrl,
-      cancel_url: payload.cancelUrl,
+      return_url: returnUrl,
+      cancel_url: cancelUrl,
       notify_url: payload.notifyUrl,
       name_first: payload.buyer.name.split(" ")[0] ?? payload.buyer.name,
       name_last: payload.buyer.name.split(" ").slice(1).join(" ") || "Customer",
@@ -95,6 +126,9 @@ Deno.serve(async (req) => {
       custom_int1: String(payload.quantity),
       custom_str1: payload.eventId,
       custom_str2: payload.tierName,
+      custom_str3: payload.eventTitle,
+      custom_str4: payload.buyer.name,
+      custom_str5: payload.buyer.whatsapp ?? "",
     };
 
     // Drop empty optional fields so signature & submitted params match exactly.
