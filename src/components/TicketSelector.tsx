@@ -26,7 +26,7 @@ export const TicketSelector = ({
 }: TicketSelectorProps) => {
   const tier = tiers.find((t) => t.id === selectedTierId) ?? tiers[0];
   const subtotal = tier.price * quantity;
-  const fee = Math.round(subtotal * BUYER_FEE_RATE);
+  const fee = calcBookingFee(quantity);
   const total = subtotal + fee;
 
   return (
