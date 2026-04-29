@@ -185,7 +185,7 @@ const Checkout = () => {
           eventTitle: event.title,
           tierName: tier.name,
           quantity: qty,
-          amount: total / 100, // formatZAR uses cents → PayFast wants rands
+          amount: total, // total is already in ZAR rands
           buyer: { name: s.name, email: s.email, whatsapp: s.whatsapp },
           returnUrl,
           cancelUrl,
