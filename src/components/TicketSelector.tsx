@@ -119,7 +119,7 @@ export const TicketSelector = ({
           <span>{formatZAR(subtotal)}</span>
         </div>
         <div className="flex justify-between text-muted-foreground">
-          <span>Booking fee (3%)</span>
+          <span>Booking fee ({formatZAR(BUYER_BOOKING_FEE_PER_TICKET)} × {quantity})</span>
           <span>{formatZAR(fee)}</span>
         </div>
         <div className="flex items-center justify-between border-t border-border pt-3">
