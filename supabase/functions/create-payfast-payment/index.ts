@@ -82,20 +82,25 @@ Deno.serve(async (req) => {
       cell_number: payload.buyer.whatsapp ?? "",
       m_payment_id,
       amount: amountStr,
-      item_name: `${payload.eventTitle} — ${payload.quantity} × ${payload.tierName}`.slice(0, 100),
-      item_description: `Tickets for ${payload.eventTitle}`.slice(0, 255),
+      item_name: `${payload.eventTitle} - ${payload.quantity} x ${payload.tierName}`.replace(/[^\x20-\x7E]/g, "").slice(0, 100),
+      item_description: `Tickets for ${payload.eventTitle}`.replace(/[^\x20-\x7E]/g, "").slice(0, 255),
       custom_str1: payload.eventId,
       custom_str2: payload.tierName,
       custom_int1: String(payload.quantity),
     };
 
-    const signature = await generateSignature(data, passphrase);
+    // Drop empty optional fields so signature & submitted params match exactly.
+    const cleaned: Record<string, string> = {};
+    for (const [k, v] of Object.entries(data)) {
+      if (v !== undefined && v !== null && String(v).trim() !== "") cleaned[k] = String(v).trim();
+    }
 
-    const params = new URLSearchParams();
-    for (const [k, v] of Object.entries(data)) if (v) params.append(k, v);
-    params.append("signature", signature);
+    const signature = await generateSignature(cleaned, passphrase);
 
-    const redirectUrl = `${PAYFAST_PROCESS_URL}?${params.toString()}`;
+    // Build query string using the SAME encoding used to sign, to guarantee match.
+    const queryParts = Object.entries(cleaned).map(([k, v]) => `${k}=${encodeForSignature(v)}`);
+    queryParts.push(`signature=${signature}`);
+    const redirectUrl = `${PAYFAST_PROCESS_URL}?${queryParts.join("&")}`;
 
     return new Response(JSON.stringify({ redirectUrl, paymentId: m_payment_id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
