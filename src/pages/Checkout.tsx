@@ -512,8 +512,8 @@ const SuccessPanel = ({
       </div>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Button variant="outline" size="lg" onClick={() => toast.info("Ticket viewer coming soon")}>
-          View my ticket
+        <Button asChild variant="outline" size="lg">
+          <Link to="/tickets">View my tickets</Link>
         </Button>
         <Button asChild variant="hero" size="lg">
           <Link to="/">Browse more events <Icon name="arrow-right" className="h-4 w-4" aria-hidden /></Link>
