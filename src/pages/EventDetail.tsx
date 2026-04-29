@@ -35,7 +35,7 @@ const EventDetail = () => {
   const doors = event.doorsTime ? formatEventDate(event.doorsTime).time : d.time;
   const tier = event.tickets.find((t) => t.id === tierId) ?? event.tickets[0];
   const subtotal = tier.price * qty;
-  const fee = Math.round(subtotal * BUYER_FEE_RATE);
+  const fee = calcBookingFee(qty);
   const total = subtotal + fee;
 
   const goCheckout = () => {
