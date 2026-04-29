@@ -559,7 +559,7 @@ const SuccessPanel = ({
         You're in! <Icon name="gift" className="h-9 w-9 text-primary" aria-hidden />
       </h1>
       <p className="mt-3 text-muted-foreground">
-        We've sent your QR ticket to WhatsApp <span className="font-semibold text-foreground">{whatsapp}</span>.
+        {syncing ? "We're confirming your payment and preparing your QR ticket." : "Your QR ticket is ready."} <span className="font-semibold text-foreground">{displayWhatsapp}</span>
       </p>
 
       <div className="mx-auto mt-8 overflow-hidden rounded-3xl border border-border bg-gradient-card text-left shadow-pop">
@@ -580,10 +580,11 @@ const SuccessPanel = ({
             ))}
           </div>
           <div className="space-y-1.5 text-sm">
-            <p><span className="text-muted-foreground">Holder:</span> <span className="font-semibold">{name}</span></p>
-            <p><span className="text-muted-foreground">Tier:</span> <span className="font-semibold">{qty} × {tier.name}</span></p>
+            <p><span className="text-muted-foreground">Holder:</span> <span className="font-semibold">{displayName}</span></p>
+            <p><span className="text-muted-foreground">Tier:</span> <span className="font-semibold">{displayTier}</span></p>
             <p><span className="text-muted-foreground">Venue:</span> <span className="font-semibold">{event.venue}, {event.city}</span></p>
-            <p><span className="text-muted-foreground">Total paid:</span> <span className="font-semibold text-gradient-sunset">{formatZAR(total)}</span></p>
+            <p><span className="text-muted-foreground">Total paid:</span> <span className="font-semibold text-gradient-sunset">{formatZAR(displayTotal)}</span></p>
+            {syncing && <p className="text-xs text-muted-foreground">Payment confirmation can take a few seconds.</p>}
           </div>
         </div>
       </div>
