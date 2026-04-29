@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { TicketSelector } from "@/components/TicketSelector";
 import { HeroSentinel } from "@/components/HeroSentinel";
 import { categories } from "@/data/events";
-import { formatEventDate, formatZAR, getEvent, BUYER_FEE_RATE } from "@/lib/events";
+import { formatEventDate, formatZAR, getEvent, calcBookingFee } from "@/lib/events";
 import NotFound from "./NotFound";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -35,7 +35,7 @@ const EventDetail = () => {
   const doors = event.doorsTime ? formatEventDate(event.doorsTime).time : d.time;
   const tier = event.tickets.find((t) => t.id === tierId) ?? event.tickets[0];
   const subtotal = tier.price * qty;
-  const fee = Math.round(subtotal * BUYER_FEE_RATE);
+  const fee = calcBookingFee(qty);
   const total = subtotal + fee;
 
   const goCheckout = () => {

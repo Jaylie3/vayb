@@ -4,7 +4,7 @@ import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatEventDate, formatZAR, getEvent, BUYER_FEE_RATE } from "@/lib/events";
+import { formatEventDate, formatZAR, getEvent, calcBookingFee, BUYER_BOOKING_FEE_PER_TICKET } from "@/lib/events";
 import type { Event, TicketTier } from "@/types/events";
 import NotFound from "./NotFound";
 import { cn } from "@/lib/utils";
@@ -126,7 +126,7 @@ const Checkout = () => {
   const d = formatEventDate(event.date);
   const subtotal = tier.price * qty;
   const discount = s.promoApplied ? Math.round(subtotal * 0.1) : 0;
-  const fee = Math.round((subtotal - discount) * BUYER_FEE_RATE);
+  const fee = calcBookingFee(qty);
   const total = subtotal - discount + fee;
 
   const errors = validate(s);
@@ -455,7 +455,7 @@ const OrderSummary = ({
             {discount > 0 && (
               <div className="flex justify-between text-success"><span>Promo</span><span>−{formatZAR(discount)}</span></div>
             )}
-            <div className="flex justify-between text-muted-foreground"><span>Booking fee (3%)</span><span>{formatZAR(fee)}</span></div>
+            <div className="flex justify-between text-muted-foreground"><span>Booking fee ({formatZAR(BUYER_BOOKING_FEE_PER_TICKET)} × {qty})</span><span>{formatZAR(fee)}</span></div>
             <div className="flex items-center justify-between border-t border-border pt-3">
               <span className="font-display font-semibold">Total</span>
               <span className="font-display text-2xl font-bold text-gradient-sunset">{formatZAR(total)}</span>

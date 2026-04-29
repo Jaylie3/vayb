@@ -1,7 +1,7 @@
 import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { formatZAR, BUYER_FEE_RATE } from "@/lib/events";
+import { formatZAR, calcBookingFee, BUYER_BOOKING_FEE_PER_TICKET } from "@/lib/events";
 import type { TicketTier } from "@/types/events";
 
 export type TicketSelectorProps = {
@@ -26,7 +26,7 @@ export const TicketSelector = ({
 }: TicketSelectorProps) => {
   const tier = tiers.find((t) => t.id === selectedTierId) ?? tiers[0];
   const subtotal = tier.price * quantity;
-  const fee = Math.round(subtotal * BUYER_FEE_RATE);
+  const fee = calcBookingFee(quantity);
   const total = subtotal + fee;
 
   return (
@@ -119,7 +119,7 @@ export const TicketSelector = ({
           <span>{formatZAR(subtotal)}</span>
         </div>
         <div className="flex justify-between text-muted-foreground">
-          <span>Booking fee (3%)</span>
+          <span>Booking fee ({formatZAR(BUYER_BOOKING_FEE_PER_TICKET)} × {quantity})</span>
           <span>{formatZAR(fee)}</span>
         </div>
         <div className="flex items-center justify-between border-t border-border pt-3">

@@ -1,7 +1,9 @@
 import type { Event, EventCategory, SACity } from "@/types/events";
 import { events } from "@/data/events";
 
-export const BUYER_FEE_RATE = 0.03;
+// Buyers pay a flat R5.00 booking fee per ticket. Organisers cover the 3% commission.
+export const BUYER_BOOKING_FEE_PER_TICKET = 5;
+export const calcBookingFee = (quantity: number): number => BUYER_BOOKING_FEE_PER_TICKET * Math.max(0, quantity);
 
 export const formatZAR = (rands: number): string =>
   new Intl.NumberFormat("en-ZA", {

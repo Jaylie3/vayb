@@ -8,7 +8,7 @@ import type { Event, EventCategory } from "@/types/events";
 
 /* Re-export types & helpers so existing imports keep working. */
 export type { Event, TicketTier, EventCategory, SACity } from "@/types/events";
-export { BUYER_FEE_RATE, formatZAR, formatEventDate, getEvent, getRelatedEvents, filterEvents } from "@/lib/events";
+export { BUYER_BOOKING_FEE_PER_TICKET, calcBookingFee, formatZAR, formatEventDate, getEvent, getRelatedEvents, filterEvents } from "@/lib/events";
 
 export const categories: ReadonlyArray<{
   slug: EventCategory;
