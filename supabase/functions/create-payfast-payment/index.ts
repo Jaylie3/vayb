@@ -2,7 +2,7 @@
 // Builds a signed payment URL the client redirects to.
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 
-const PAYFAST_HOST = "https://sandbox.payfast.co.za";
+const PAYFAST_HOST = "https://www.payfast.co.za";
 const PAYFAST_PROCESS_URL = `${PAYFAST_HOST}/eng/process`;
 
 interface PaymentPayload {
