@@ -4,7 +4,7 @@ import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatEventDate, formatZAR, getEvent, BUYER_FEE_RATE } from "@/lib/events";
+import { formatEventDate, formatZAR, getEvent, calcBookingFee, BUYER_BOOKING_FEE_PER_TICKET } from "@/lib/events";
 import type { Event, TicketTier } from "@/types/events";
 import NotFound from "./NotFound";
 import { cn } from "@/lib/utils";
