@@ -3,7 +3,7 @@ import { Icon } from "./Icon";
 
 const benefits = [
   "Same-day EFT payouts",
-  "Flat 3% buyer fee, 0% to you",
+  "Simple 3% commission, R5 booking fee to buyers",
   "WhatsApp ticket delivery",
   "Built-in referrals, ads & email",
   "Scan-in app for the door",
