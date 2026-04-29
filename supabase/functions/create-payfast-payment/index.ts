@@ -105,15 +105,17 @@ Deno.serve(async (req) => {
 
     const signature = await generateSignature(cleaned, passphrase.trim());
 
-    // Build query string using the SAME encoding used to sign, to guarantee match.
-    const queryParts = Object.entries(cleaned).map(([k, v]) => `${k}=${encodeForSignature(v)}`);
-    queryParts.push(`signature=${signature}`);
-    const redirectUrl = `${PAYFAST_PROCESS_URL}?${queryParts.join("&")}`;
+    // Return form fields so the client POSTs to PayFast (avoids URL re-encoding mismatches).
+    const formFields = { ...cleaned, signature };
 
-    return new Response(JSON.stringify({ redirectUrl, paymentId: m_payment_id }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({
+        actionUrl: PAYFAST_PROCESS_URL,
+        fields: formFields,
+        paymentId: m_payment_id,
+      }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
+    );
   } catch (err) {
     console.error("[create-payfast-payment]", err);
     return new Response(JSON.stringify({ error: (err as Error).message }), {
