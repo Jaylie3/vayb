@@ -193,10 +193,23 @@ const Checkout = () => {
         },
       });
 
-      if (error || !data?.redirectUrl) {
+      if (error || !data?.actionUrl || !data?.fields) {
         throw new Error(error?.message ?? "Could not start PayFast checkout");
       }
-      window.location.href = data.redirectUrl;
+
+      // POST a form to PayFast (avoids URL-encoding mismatches with the signature).
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = data.actionUrl;
+      for (const [k, v] of Object.entries(data.fields as Record<string, string>)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = v;
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
     } catch (err) {
       dispatch({ type: "processing", value: false });
       toast.error("Couldn't start PayFast", {

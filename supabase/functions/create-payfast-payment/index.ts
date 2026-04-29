@@ -18,8 +18,16 @@ interface PaymentPayload {
 }
 
 function encodeForSignature(value: string): string {
-  // PayFast spec: application/x-www-form-urlencoded with %20 for spaces and uppercase hex.
-  return encodeURIComponent(value).replace(/%[0-9a-f]{2}/g, (m) => m.toUpperCase()).replace(/%20/g, "+");
+  // Match PHP urlencode() exactly: spaces => '+', uppercase hex,
+  // and encode characters encodeURIComponent leaves alone (! ' ( ) *).
+  return encodeURIComponent(value)
+    .replace(/%[0-9a-f]{2}/g, (m) => m.toUpperCase())
+    .replace(/%20/g, "+")
+    .replace(/!/g, "%21")
+    .replace(/'/g, "%27")
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29")
+    .replace(/\*/g, "%2A");
 }
 
 async function md5Hex(input: string): Promise<string> {
@@ -97,15 +105,17 @@ Deno.serve(async (req) => {
 
     const signature = await generateSignature(cleaned, passphrase.trim());
 
-    // Build query string using the SAME encoding used to sign, to guarantee match.
-    const queryParts = Object.entries(cleaned).map(([k, v]) => `${k}=${encodeForSignature(v)}`);
-    queryParts.push(`signature=${signature}`);
-    const redirectUrl = `${PAYFAST_PROCESS_URL}?${queryParts.join("&")}`;
+    // Return form fields so the client POSTs to PayFast (avoids URL re-encoding mismatches).
+    const formFields = { ...cleaned, signature };
 
-    return new Response(JSON.stringify({ redirectUrl, paymentId: m_payment_id }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({
+        actionUrl: PAYFAST_PROCESS_URL,
+        fields: formFields,
+        paymentId: m_payment_id,
+      }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
+    );
   } catch (err) {
     console.error("[create-payfast-payment]", err);
     return new Response(JSON.stringify({ error: (err as Error).message }), {
