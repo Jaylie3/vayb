@@ -1,7 +1,7 @@
 import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { formatZAR, BUYER_FEE_RATE } from "@/lib/events";
+import { formatZAR, calcBookingFee, BUYER_BOOKING_FEE_PER_TICKET } from "@/lib/events";
 import type { TicketTier } from "@/types/events";
 
 export type TicketSelectorProps = {
