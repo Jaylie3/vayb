@@ -9,6 +9,7 @@ import type { Event, TicketTier } from "@/types/events";
 import NotFound from "./NotFound";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 type CheckoutStep = "details" | "payment" | "success";
 type PaymentMethod = "card" | "payfast" | "eft";
