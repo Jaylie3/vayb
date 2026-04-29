@@ -126,7 +126,7 @@ const Checkout = () => {
   const d = formatEventDate(event.date);
   const subtotal = tier.price * qty;
   const discount = s.promoApplied ? Math.round(subtotal * 0.1) : 0;
-  const fee = Math.round((subtotal - discount) * BUYER_FEE_RATE);
+  const fee = calcBookingFee(qty);
   const total = subtotal - discount + fee;
 
   const errors = validate(s);
