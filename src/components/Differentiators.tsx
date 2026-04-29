@@ -3,7 +3,7 @@ import { Icon, type IconName } from "./Icon";
 const items: { icon: IconName; title: string; body: string }[] = [
   { icon: "flash", title: "Same-day payouts", body: "Funds in your account the day fans buy. No 7-day waits." },
   { icon: "whatsapp", title: "WhatsApp tickets", body: "Tickets delivered to the app every South African already uses." },
-  { icon: "piggy", title: "Lower buyer fees", body: "A flat 3% to fans. 0% to organisers. Honest pricing, finally." },
+  { icon: "piggy", title: "Honest, flat fees", body: "Just R5 per ticket for fans. Organisers pay a simple 3% commission. No surprises." },
   { icon: "compass", title: "Built for discovery", body: "Curated by city, mood and moment — not buried in a list." },
 ];
 
