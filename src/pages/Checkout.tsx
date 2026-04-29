@@ -9,6 +9,7 @@ import type { Event, TicketTier } from "@/types/events";
 import NotFound from "./NotFound";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 type CheckoutStep = "details" | "payment" | "success";
 type PaymentMethod = "card" | "payfast" | "eft";
@@ -143,15 +144,65 @@ const Checkout = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const pay = (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch({ type: "processing", value: true });
-    setTimeout(() => {
-      dispatch({ type: "processing", value: false });
+  // Auto-show success when returning from PayFast
+  useEffect(() => {
+    if (params.get("status") === "success") {
       dispatch({ type: "go", step: "success" });
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      toast.success("Payment confirmed", { description: "Your ticket is on its way to WhatsApp." });
-    }, 1800);
+      toast.success("Payment confirmed", { description: "Your ticket is on its way." });
+    } else if (params.get("status") === "cancelled") {
+      toast.error("Payment cancelled", { description: "You can try again whenever you're ready." });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const pay = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!event || !tier) return;
+
+    if (s.paymentMethod !== "payfast") {
+      // Card / EFT not implemented — keep mock flow
+      dispatch({ type: "processing", value: true });
+      setTimeout(() => {
+        dispatch({ type: "processing", value: false });
+        dispatch({ type: "go", step: "success" });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        toast.success("Payment confirmed", { description: "Your ticket is on its way to WhatsApp." });
+      }, 1800);
+      return;
+    }
+
+    dispatch({ type: "processing", value: true });
+    try {
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const origin = window.location.origin;
+      const returnUrl = `${origin}/checkout/${event.id}?status=success`;
+      const cancelUrl = `${origin}/checkout/${event.id}?status=cancelled`;
+      const notifyUrl = `https://${projectId}.supabase.co/functions/v1/payfast-itn`;
+
+      const { data, error } = await supabase.functions.invoke("create-payfast-payment", {
+        body: {
+          eventId: event.id,
+          eventTitle: event.title,
+          tierName: tier.name,
+          quantity: qty,
+          amount: total / 100, // formatZAR uses cents → PayFast wants rands
+          buyer: { name: s.name, email: s.email, whatsapp: s.whatsapp },
+          returnUrl,
+          cancelUrl,
+          notifyUrl,
+        },
+      });
+
+      if (error || !data?.redirectUrl) {
+        throw new Error(error?.message ?? "Could not start PayFast checkout");
+      }
+      window.location.href = data.redirectUrl;
+    } catch (err) {
+      dispatch({ type: "processing", value: false });
+      toast.error("Couldn't start PayFast", {
+        description: err instanceof Error ? err.message : "Please try again.",
+      });
+    }
   };
 
   return (
@@ -461,8 +512,8 @@ const SuccessPanel = ({
       </div>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Button variant="outline" size="lg" onClick={() => toast.info("Ticket viewer coming soon")}>
-          View my ticket
+        <Button asChild variant="outline" size="lg">
+          <Link to="/tickets">View my tickets</Link>
         </Button>
         <Button asChild variant="hero" size="lg">
           <Link to="/">Browse more events <Icon name="arrow-right" className="h-4 w-4" aria-hidden /></Link>
