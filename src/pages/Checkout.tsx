@@ -455,7 +455,7 @@ const OrderSummary = ({
             {discount > 0 && (
               <div className="flex justify-between text-success"><span>Promo</span><span>−{formatZAR(discount)}</span></div>
             )}
-            <div className="flex justify-between text-muted-foreground"><span>Booking fee (3%)</span><span>{formatZAR(fee)}</span></div>
+            <div className="flex justify-between text-muted-foreground"><span>Booking fee ({formatZAR(BUYER_BOOKING_FEE_PER_TICKET)} × {qty})</span><span>{formatZAR(fee)}</span></div>
             <div className="flex items-center justify-between border-t border-border pt-3">
               <span className="font-display font-semibold">Total</span>
               <span className="font-display text-2xl font-bold text-gradient-sunset">{formatZAR(total)}</span>
