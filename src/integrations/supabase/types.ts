@@ -284,6 +284,63 @@ export type Database = {
           },
         ]
       }
+      tickets: {
+        Row: {
+          buyer_email: string
+          buyer_name: string | null
+          buyer_phone: string | null
+          created_at: string
+          event_slug: string
+          event_title: string
+          id: string
+          payfast_payment_id: string | null
+          payment_id: string
+          qr_code: string
+          quantity: number
+          status: Database["public"]["Enums"]["order_status"]
+          tier_name: string
+          total: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          buyer_email: string
+          buyer_name?: string | null
+          buyer_phone?: string | null
+          created_at?: string
+          event_slug: string
+          event_title: string
+          id?: string
+          payfast_payment_id?: string | null
+          payment_id: string
+          qr_code?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          tier_name: string
+          total: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          buyer_email?: string
+          buyer_name?: string | null
+          buyer_phone?: string | null
+          created_at?: string
+          event_slug?: string
+          event_title?: string
+          id?: string
+          payfast_payment_id?: string | null
+          payment_id?: string
+          qr_code?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          tier_name?: string
+          total?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
