@@ -471,9 +471,8 @@ const Admin = () => {
                       size="sm"
                       onClick={() => startEdit(ev.id)}
                       aria-label="Edit event"
-                      title="Edit"
                     >
-                      <Icon name="edit" className="h-4 w-4" />
+                      Edit
                     </Button>
                     <Button
                       variant="ghost"
