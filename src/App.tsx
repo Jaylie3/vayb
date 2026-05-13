@@ -16,6 +16,7 @@ const Auth = lazy(() => import("./pages/Auth"));
 const Tickets = lazy(() => import("./pages/Tickets"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
+const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
 
 const queryClient = new QueryClient();
 
