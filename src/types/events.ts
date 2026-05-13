@@ -14,52 +14,182 @@ export type EventCategory =
   | "conferences";
 
 export type SACity =
-  | "Cape Town"
+  // Gauteng
   | "Johannesburg"
-  | "Durban"
   | "Pretoria"
-  | "Gqeberha"
-  | "East London"
-  | "Bloemfontein"
-  | "Polokwane"
-  | "Mbombela"
-  | "Kimberley"
-  | "Pietermaritzburg"
-  | "Stellenbosch"
-  | "George"
-  | "Rustenburg"
   | "Soweto"
   | "Centurion"
   | "Sandton"
+  | "Vanderbijlpark"
+  | "Vereeniging"
+  | "Benoni"
+  | "Boksburg"
+  | "Brakpan"
+  | "Germiston"
+  | "Springs"
+  | "Krugersdorp"
+  | "Randfontein"
+  // Western Cape
+  | "Cape Town"
+  | "Stellenbosch"
+  | "Paarl"
+  | "George"
   | "Knysna"
   | "Hermanus"
-  | "Paarl"
+  | "Oudtshoorn"
+  | "Worcester"
+  | "Swellendam"
+  | "Bellville"
+  | "Somerset West"
+  // KwaZulu-Natal
+  | "Durban"
+  | "Pietermaritzburg"
+  | "Newcastle"
+  | "Empangeni"
+  | "Richards Bay"
+  | "Pinetown"
+  | "Umlazi"
+  | "Mooi River"
+  | "Howick"
+  // Eastern Cape
+  | "Gqeberha"
+  | "East London"
+  | "Bhisho"
+  | "KuGompo City"
+  | "Kariega"
+  | "Mthatha"
+  | "Makhanda"
+  | "Graaff-Reinet"
+  // Free State
+  | "Bloemfontein"
+  | "Welkom"
+  | "Odendaalsrus"
+  | "Sasolburg"
+  | "Bethlehem"
+  | "Kroonstad"
+  | "Parys"
+  | "Clarens"
+  // Limpopo
+  | "Polokwane"
+  | "Musina"
+  | "Phalaborwa"
+  | "Thabazimbi"
+  | "Makhado"
+  | "Bela-Bela"
+  | "Tzaneen"
+  // Mpumalanga
+  | "Mbombela"
+  | "eMalahleni"
+  | "Middelburg"
+  | "Secunda"
+  | "Ermelo"
+  | "Standerton"
+  | "Barberton"
+  | "Sabie"
+  // North West
+  | "Rustenburg"
+  | "Mahikeng"
+  | "Klerksdorp"
   | "Potchefstroom"
-  | "Upington";
+  | "Brits"
+  | "Hartbeespoort"
+  | "Lichtenburg"
+  | "Vryburg"
+  // Northern Cape
+  | "Kimberley"
+  | "Upington"
+  | "Springbok"
+  | "De Aar"
+  | "Kuruman";
 
 export const SA_CITIES: SACity[] = [
+  // Gauteng
   "Johannesburg",
-  "Cape Town",
-  "Durban",
   "Pretoria",
-  "Sandton",
-  "Centurion",
   "Soweto",
-  "Gqeberha",
-  "East London",
-  "Bloemfontein",
-  "Pietermaritzburg",
-  "Polokwane",
-  "Mbombela",
-  "Kimberley",
-  "Rustenburg",
-  "Potchefstroom",
+  "Centurion",
+  "Sandton",
+  "Vanderbijlpark",
+  "Vereeniging",
+  "Benoni",
+  "Boksburg",
+  "Brakpan",
+  "Germiston",
+  "Springs",
+  "Krugersdorp",
+  "Randfontein",
+  // Western Cape
+  "Cape Town",
   "Stellenbosch",
   "Paarl",
   "George",
   "Knysna",
   "Hermanus",
+  "Oudtshoorn",
+  "Worcester",
+  "Swellendam",
+  "Bellville",
+  "Somerset West",
+  // KwaZulu-Natal
+  "Durban",
+  "Pietermaritzburg",
+  "Newcastle",
+  "Empangeni",
+  "Richards Bay",
+  "Pinetown",
+  "Umlazi",
+  "Mooi River",
+  "Howick",
+  // Eastern Cape
+  "Gqeberha",
+  "East London",
+  "Bhisho",
+  "KuGompo City",
+  "Kariega",
+  "Mthatha",
+  "Makhanda",
+  "Graaff-Reinet",
+  // Free State
+  "Bloemfontein",
+  "Welkom",
+  "Odendaalsrus",
+  "Sasolburg",
+  "Bethlehem",
+  "Kroonstad",
+  "Parys",
+  "Clarens",
+  // Limpopo
+  "Polokwane",
+  "Musina",
+  "Phalaborwa",
+  "Thabazimbi",
+  "Makhado",
+  "Bela-Bela",
+  "Tzaneen",
+  // Mpumalanga
+  "Mbombela",
+  "eMalahleni",
+  "Middelburg",
+  "Secunda",
+  "Ermelo",
+  "Standerton",
+  "Barberton",
+  "Sabie",
+  // North West
+  "Rustenburg",
+  "Mahikeng",
+  "Klerksdorp",
+  "Potchefstroom",
+  "Brits",
+  "Hartbeespoort",
+  "Lichtenburg",
+  "Vryburg",
+  // Northern Cape
+  "Kimberley",
   "Upington",
+  "Springbok",
+  "De Aar",
+  "Kuruman",
 ];
 
 export type TicketTier = {
