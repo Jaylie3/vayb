@@ -46,6 +46,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <RouterProvider router={router} />
+          <Analytics />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
