@@ -1,5 +1,5 @@
 import { Logo } from "./Logo";
-import { Icon } from "./Icon";
+import { Instagram, Facebook, Twitter } from "lucide-react";
 
 export const Footer = () => (
   <footer className="border-t border-border/60 bg-muted/40">
