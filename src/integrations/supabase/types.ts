@@ -367,6 +367,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_city_analytics: {
+        Args: never
+        Returns: {
+          bookings: number
+          city: Database["public"]["Enums"]["sa_city"]
+          commission: number
+          payout: number
+          revenue: number
+          tickets_sold: number
+        }[]
+      }
       admin_list_users: {
         Args: never
         Returns: {
