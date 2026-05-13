@@ -4,7 +4,9 @@ import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatEventDate, formatZAR, getEvent, calcBookingFee, BUYER_BOOKING_FEE_PER_TICKET } from "@/lib/events";
+import { formatEventDate, formatZAR, calcBookingFee, BUYER_BOOKING_FEE_PER_TICKET } from "@/lib/events";
+import { fetchEvent } from "@/lib/eventsApi";
+import { useQuery } from "@tanstack/react-query";
 import type { Event, TicketTier } from "@/types/events";
 import NotFound from "./NotFound";
 import { cn } from "@/lib/utils";
@@ -106,14 +108,18 @@ const Checkout = () => {
   const { id } = useParams<{ id: string }>();
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const event = id ? getEvent(id) : undefined;
+  const { data: event, isLoading: eventLoading } = useQuery({
+    queryKey: ["event", id],
+    queryFn: () => fetchEvent(id!),
+    enabled: !!id,
+  });
 
   const [s, dispatch] = useReducer(reducer, initialState);
 
-  // Redirect if event missing
+  // Redirect if event missing (after load completes)
   useEffect(() => {
-    if (id && !event) navigate("/", { replace: true });
-  }, [id, event, navigate]);
+    if (id && !eventLoading && !event) navigate("/", { replace: true });
+  }, [id, event, eventLoading, navigate]);
 
   const tier: TicketTier | undefined = useMemo(() => {
     if (!event) return undefined;

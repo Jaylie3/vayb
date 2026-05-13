@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { TicketSelector } from "@/components/TicketSelector";
 import { HeroSentinel } from "@/components/HeroSentinel";
 import { categories } from "@/data/events";
-import { formatEventDate, formatZAR, getEvent, calcBookingFee } from "@/lib/events";
+import { formatEventDate, formatZAR, calcBookingFee } from "@/lib/events";
+import { fetchEvent } from "@/lib/eventsApi";
+import { useQuery } from "@tanstack/react-query";
 import NotFound from "./NotFound";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -13,12 +15,20 @@ import { cn } from "@/lib/utils";
 const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const event = id ? getEvent(id) : undefined;
+  const { data: event, isLoading } = useQuery({
+    queryKey: ["event", id],
+    queryFn: () => fetchEvent(id!),
+    enabled: !!id,
+  });
 
   const firstAvailable = event?.tickets.find((t) => t.available) ?? event?.tickets[0];
-  const [tierId, setTierId] = useState<string>(firstAvailable?.id ?? "");
+  const [tierId, setTierId] = useState<string>("");
   const [qty, setQty] = useState(1);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    if (firstAvailable && !tierId) setTierId(firstAvailable.id);
+  }, [firstAvailable, tierId]);
 
   // Lock body scroll when mobile drawer is open
   useEffect(() => {
@@ -28,6 +38,9 @@ const EventDetail = () => {
     return () => { document.body.style.overflow = prev; };
   }, [drawerOpen]);
 
+  if (isLoading) {
+    return <div className="container py-24 text-center text-muted-foreground">Loading event…</div>;
+  }
   if (!event) return <NotFound />;
 
   const cat = categories.find((c) => c.slug === event.category);
