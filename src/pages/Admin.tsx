@@ -331,7 +331,7 @@ const Admin = () => {
                 <Select value={city} onValueChange={setCity}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    {["Cape Town","Johannesburg","Durban","Pretoria"].map((c) => (
+                    {SA_CITIES.map((c) => (
                       <SelectItem key={c} value={c}>{c}</SelectItem>
                     ))}
                   </SelectContent>
