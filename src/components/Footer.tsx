@@ -43,7 +43,7 @@ export const Footer = () => (
     <div className="border-t border-border/60">
       <div className="container flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted-foreground sm:flex-row">
         <p>© {new Date().getFullYear()} Vayb. All rights reserved.</p>
-        <p className="inline-flex items-center gap-1.5">Made in SA <Icon name="flag" className="h-3.5 w-3.5 text-primary" /></p>
+        
       </div>
     </div>
   </footer>
