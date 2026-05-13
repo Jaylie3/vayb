@@ -1,6 +1,14 @@
 import { lazy } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import RootLayout from "./layouts/RootLayout";
+import NotFound from "./pages/NotFound";
+import { AuthProvider } from "./auth/AuthProvider";
+import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
