@@ -10,16 +10,33 @@ export const Footer = () => (
           South Africa's mobile-first ticketing platform. Tickets to WhatsApp, lower fees, same-day payouts.
         </p>
         <div className="flex items-center gap-3">
-          {(["whatsapp", "message", "music"] as const).map((n) => (
-            <a
-              key={n}
-              href="#"
-              aria-label="Social link"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-smooth hover:border-primary hover:text-primary"
-            >
-              <Icon name={n} className="h-4 w-4" />
-            </a>
-          ))}
+          <a
+            href="https://instagram.com/vayb"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-smooth hover:border-primary hover:text-primary"
+          >
+            <Instagram className="h-4 w-4" />
+          </a>
+          <a
+            href="https://facebook.com/vayb"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-smooth hover:border-primary hover:text-primary"
+          >
+            <Facebook className="h-4 w-4" />
+          </a>
+          <a
+            href="https://x.com/vayb"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X (Twitter)"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-smooth hover:border-primary hover:text-primary"
+          >
+            <Twitter className="h-4 w-4" />
+          </a>
         </div>
       </div>
 
