@@ -22,4 +22,6 @@ export const categories: ReadonlyArray<{
   { slug: "conferences", label: "Conferences", icon: "briefcase" },
 ];
 
-export const cities = ["All cities", "Cape Town", "Johannesburg", "Durban", "Pretoria"] as const;
+import { SA_CITIES } from "@/types/events";
+
+export const cities = ["All cities", ...SA_CITIES] as const;

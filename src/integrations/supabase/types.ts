@@ -402,7 +402,29 @@ export type Database = {
         | "food"
         | "conferences"
       order_status: "pending" | "paid" | "cancelled" | "refunded"
-      sa_city: "Cape Town" | "Johannesburg" | "Durban" | "Pretoria"
+      sa_city:
+        | "Cape Town"
+        | "Johannesburg"
+        | "Durban"
+        | "Pretoria"
+        | "Gqeberha"
+        | "East London"
+        | "Bloemfontein"
+        | "Polokwane"
+        | "Mbombela"
+        | "Kimberley"
+        | "Pietermaritzburg"
+        | "Stellenbosch"
+        | "George"
+        | "Rustenburg"
+        | "Soweto"
+        | "Centurion"
+        | "Sandton"
+        | "Knysna"
+        | "Hermanus"
+        | "Paarl"
+        | "Potchefstroom"
+        | "Upington"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -540,7 +562,30 @@ export const Constants = {
         "conferences",
       ],
       order_status: ["pending", "paid", "cancelled", "refunded"],
-      sa_city: ["Cape Town", "Johannesburg", "Durban", "Pretoria"],
+      sa_city: [
+        "Cape Town",
+        "Johannesburg",
+        "Durban",
+        "Pretoria",
+        "Gqeberha",
+        "East London",
+        "Bloemfontein",
+        "Polokwane",
+        "Mbombela",
+        "Kimberley",
+        "Pietermaritzburg",
+        "Stellenbosch",
+        "George",
+        "Rustenburg",
+        "Soweto",
+        "Centurion",
+        "Sandton",
+        "Knysna",
+        "Hermanus",
+        "Paarl",
+        "Potchefstroom",
+        "Upington",
+      ],
     },
   },
 } as const

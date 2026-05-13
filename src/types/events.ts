@@ -13,7 +13,54 @@ export type EventCategory =
   | "food"
   | "conferences";
 
-export type SACity = "Cape Town" | "Johannesburg" | "Durban" | "Pretoria";
+export type SACity =
+  | "Cape Town"
+  | "Johannesburg"
+  | "Durban"
+  | "Pretoria"
+  | "Gqeberha"
+  | "East London"
+  | "Bloemfontein"
+  | "Polokwane"
+  | "Mbombela"
+  | "Kimberley"
+  | "Pietermaritzburg"
+  | "Stellenbosch"
+  | "George"
+  | "Rustenburg"
+  | "Soweto"
+  | "Centurion"
+  | "Sandton"
+  | "Knysna"
+  | "Hermanus"
+  | "Paarl"
+  | "Potchefstroom"
+  | "Upington";
+
+export const SA_CITIES: SACity[] = [
+  "Johannesburg",
+  "Cape Town",
+  "Durban",
+  "Pretoria",
+  "Sandton",
+  "Centurion",
+  "Soweto",
+  "Gqeberha",
+  "East London",
+  "Bloemfontein",
+  "Pietermaritzburg",
+  "Polokwane",
+  "Mbombela",
+  "Kimberley",
+  "Rustenburg",
+  "Potchefstroom",
+  "Stellenbosch",
+  "Paarl",
+  "George",
+  "Knysna",
+  "Hermanus",
+  "Upington",
+];
 
 export type TicketTier = {
   id: string;

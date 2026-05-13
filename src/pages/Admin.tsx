@@ -12,6 +12,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { toast } from "sonner";
 import { formatZAR } from "@/lib/events";
+import { SA_CITIES } from "@/types/events";
 
 type EventRow = {
   id: string;
@@ -331,7 +332,7 @@ const Admin = () => {
                 <Select value={city} onValueChange={setCity}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    {["Cape Town","Johannesburg","Durban","Pretoria"].map((c) => (
+                    {SA_CITIES.map((c) => (
                       <SelectItem key={c} value={c}>{c}</SelectItem>
                     ))}
                   </SelectContent>

@@ -1,0 +1,18 @@
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Gqeberha';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'East London';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Bloemfontein';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Polokwane';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Mbombela';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Kimberley';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Pietermaritzburg';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Stellenbosch';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'George';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Rustenburg';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Soweto';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Centurion';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Sandton';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Knysna';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Hermanus';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Paarl';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Potchefstroom';
+ALTER TYPE public.sa_city ADD VALUE IF NOT EXISTS 'Upington';
