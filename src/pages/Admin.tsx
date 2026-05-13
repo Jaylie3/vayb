@@ -12,6 +12,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { toast } from "sonner";
 import { formatZAR } from "@/lib/events";
+import { SA_CITIES } from "@/types/events";
 
 type EventRow = {
   id: string;
