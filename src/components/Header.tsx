@@ -121,9 +121,14 @@ export const Header = () => {
                   <Icon name="clipboard" className="mr-2 h-4 w-4" aria-hidden /> My tickets
                 </DropdownMenuItem>
                 {isAdmin && (
-                  <DropdownMenuItem onClick={() => navigate("/admin")}>
-                    <Icon name="shield-check" className="mr-2 h-4 w-4" aria-hidden /> Admin dashboard
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem onClick={() => navigate("/admin")}>
+                      <Icon name="shield-check" className="mr-2 h-4 w-4" aria-hidden /> Admin dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/admin/users")}>
+                      <Icon name="shield" className="mr-2 h-4 w-4" aria-hidden /> Manage admins
+                    </DropdownMenuItem>
+                  </>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
