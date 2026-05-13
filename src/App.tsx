@@ -9,13 +9,6 @@ import RootLayout from "./layouts/RootLayout";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./auth/AuthProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import RootLayout from "./layouts/RootLayout";
-import NotFound from "./pages/NotFound";
-import { AuthProvider } from "./auth/AuthProvider";
-import { ThemeProvider } from "./components/ThemeProvider";
 
 const Index = lazy(() => import("./pages/Index"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
