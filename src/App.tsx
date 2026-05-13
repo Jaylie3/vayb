@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import { Analytics } from "@vercel/analytics/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -9,6 +8,7 @@ import RootLayout from "./layouts/RootLayout";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./auth/AuthProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const Index = lazy(() => import("./pages/Index"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
@@ -17,7 +17,6 @@ const Auth = lazy(() => import("./pages/Auth"));
 const Tickets = lazy(() => import("./pages/Tickets"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
-const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
 
 const queryClient = new QueryClient();
 
@@ -32,7 +31,6 @@ const router = createBrowserRouter([
       { path: "/tickets", element: <Tickets /> },
       { path: "/admin", element: <Admin /> },
       { path: "/admin/users", element: <AdminUsers /> },
-      { path: "/admin/analytics", element: <AdminAnalytics /> },
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -46,7 +44,6 @@ const App = () => (
           <Toaster />
           <Sonner />
           <RouterProvider router={router} />
-          <Analytics />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
