@@ -1,9 +1,9 @@
-import type { Event, EventCategory, SACity } from "@/types/events";
-import { events } from "@/data/events";
+import type { Event } from "@/types/events";
 
 // Buyers pay a flat R5.00 booking fee per ticket. Organisers cover the 3% commission.
 export const BUYER_BOOKING_FEE_PER_TICKET = 5;
-export const calcBookingFee = (quantity: number): number => BUYER_BOOKING_FEE_PER_TICKET * Math.max(0, quantity);
+export const calcBookingFee = (quantity: number): number =>
+  BUYER_BOOKING_FEE_PER_TICKET * Math.max(0, quantity);
 
 export const formatZAR = (rands: number): string =>
   new Intl.NumberFormat("en-ZA", {
@@ -34,18 +34,11 @@ export const formatEventDate = (iso: string): FormattedEventDate => {
   };
 };
 
-export const getEvent = (id: string): Event | undefined =>
-  events.find((e) => e.slug === id || e.id === id);
-
-export const getRelatedEvents = (event: Event, limit = 3): Event[] => {
-  const others = events.filter((e) => e.id !== event.id);
+/** Pick related events from a preloaded list. */
+export const getRelatedEvents = (event: Event, all: Event[], limit = 3): Event[] => {
+  const others = all.filter((e) => e.id !== event.id);
   const sameCat = others.filter((e) => e.category === event.category);
   const sameCity = others.filter((e) => e.city === event.city && e.category !== event.category);
   const rest = others.filter((e) => !sameCat.includes(e) && !sameCity.includes(e));
   return [...sameCat, ...sameCity, ...rest].slice(0, limit);
 };
-
-export const filterEvents = (category?: EventCategory | null, city?: SACity | null): Event[] =>
-  events.filter(
-    (e) => (!category || e.category === category) && (!city || e.city === city),
-  );
