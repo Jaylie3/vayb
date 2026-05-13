@@ -378,7 +378,7 @@ const Admin = () => {
                   <p className="mt-1 text-xs text-muted-foreground">From {formatZAR(ev.price_from)}{ev.trending ? " · Trending" : ""}</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => removeEvent(ev.id)}>
-                  <Icon name="trash" className="h-4 w-4" />
+                  <Icon name="close" className="h-4 w-4" />
                 </Button>
               </li>
             ))}
