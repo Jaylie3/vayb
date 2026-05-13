@@ -425,6 +425,62 @@ export type Database = {
         | "Paarl"
         | "Potchefstroom"
         | "Upington"
+        | "Vanderbijlpark"
+        | "Vereeniging"
+        | "Benoni"
+        | "Boksburg"
+        | "Brakpan"
+        | "Germiston"
+        | "Springs"
+        | "Krugersdorp"
+        | "Randfontein"
+        | "Oudtshoorn"
+        | "Worcester"
+        | "Swellendam"
+        | "Bellville"
+        | "Somerset West"
+        | "Newcastle"
+        | "Empangeni"
+        | "Richards Bay"
+        | "Pinetown"
+        | "Umlazi"
+        | "Mooi River"
+        | "Howick"
+        | "Bhisho"
+        | "KuGompo City"
+        | "Kariega"
+        | "Mthatha"
+        | "Makhanda"
+        | "Graaff-Reinet"
+        | "Welkom"
+        | "Odendaalsrus"
+        | "Sasolburg"
+        | "Bethlehem"
+        | "Kroonstad"
+        | "Parys"
+        | "Clarens"
+        | "Musina"
+        | "Phalaborwa"
+        | "Thabazimbi"
+        | "Makhado"
+        | "Bela-Bela"
+        | "Tzaneen"
+        | "eMalahleni"
+        | "Middelburg"
+        | "Secunda"
+        | "Ermelo"
+        | "Standerton"
+        | "Barberton"
+        | "Sabie"
+        | "Mahikeng"
+        | "Klerksdorp"
+        | "Brits"
+        | "Hartbeespoort"
+        | "Lichtenburg"
+        | "Vryburg"
+        | "Springbok"
+        | "De Aar"
+        | "Kuruman"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -585,6 +641,62 @@ export const Constants = {
         "Paarl",
         "Potchefstroom",
         "Upington",
+        "Vanderbijlpark",
+        "Vereeniging",
+        "Benoni",
+        "Boksburg",
+        "Brakpan",
+        "Germiston",
+        "Springs",
+        "Krugersdorp",
+        "Randfontein",
+        "Oudtshoorn",
+        "Worcester",
+        "Swellendam",
+        "Bellville",
+        "Somerset West",
+        "Newcastle",
+        "Empangeni",
+        "Richards Bay",
+        "Pinetown",
+        "Umlazi",
+        "Mooi River",
+        "Howick",
+        "Bhisho",
+        "KuGompo City",
+        "Kariega",
+        "Mthatha",
+        "Makhanda",
+        "Graaff-Reinet",
+        "Welkom",
+        "Odendaalsrus",
+        "Sasolburg",
+        "Bethlehem",
+        "Kroonstad",
+        "Parys",
+        "Clarens",
+        "Musina",
+        "Phalaborwa",
+        "Thabazimbi",
+        "Makhado",
+        "Bela-Bela",
+        "Tzaneen",
+        "eMalahleni",
+        "Middelburg",
+        "Secunda",
+        "Ermelo",
+        "Standerton",
+        "Barberton",
+        "Sabie",
+        "Mahikeng",
+        "Klerksdorp",
+        "Brits",
+        "Hartbeespoort",
+        "Lichtenburg",
+        "Vryburg",
+        "Springbok",
+        "De Aar",
+        "Kuruman",
       ],
     },
   },
