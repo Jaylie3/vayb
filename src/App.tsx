@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -45,6 +46,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <RouterProvider router={router} />
+          <Analytics />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
