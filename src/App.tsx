@@ -15,6 +15,7 @@ const Checkout = lazy(() => import("./pages/Checkout"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Tickets = lazy(() => import("./pages/Tickets"));
 const Admin = lazy(() => import("./pages/Admin"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
       { path: "/auth", element: <Auth /> },
       { path: "/tickets", element: <Tickets /> },
       { path: "/admin", element: <Admin /> },
+      { path: "/admin/users", element: <AdminUsers /> },
       { path: "*", element: <NotFound /> },
     ],
   },
