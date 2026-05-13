@@ -93,7 +93,7 @@ const AdminAnalytics = () => {
           </p>
         </div>
         <Button asChild variant="outline" size="sm">
-          <Link to="/admin"><Icon name="chevron-left" className="mr-1 h-4 w-4" /> Dashboard</Link>
+          <Link to="/admin"><Icon name="arrow-left" className="mr-1 h-4 w-4" /> Dashboard</Link>
         </Button>
       </header>
 
