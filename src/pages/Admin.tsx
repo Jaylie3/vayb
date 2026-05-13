@@ -42,6 +42,13 @@ const slugify = (s: string) =>
 
 const blankTier = (): TierDraft => ({ name: "", price: "", perks: "", badge: "", available: true });
 
+const toLocalInput = (iso: string | null | undefined) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
 const Admin = () => {
   const { user, loading } = useAuth();
   const { isAdmin, checking } = useIsAdmin();
@@ -50,6 +57,7 @@ const Admin = () => {
   const [events, setEvents] = useState<EventRow[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   // form
   const [title, setTitle] = useState("");
@@ -82,7 +90,10 @@ const Admin = () => {
       .then(({ data }) => setEvents((data as EventRow[]) ?? []));
   }, [isAdmin, refreshKey]);
 
-  const computedSlug = useMemo(() => (slugTouched ? slug : slugify(title)), [title, slug, slugTouched]);
+  const computedSlug = useMemo(
+    () => (slugTouched || editingId ? slug : slugify(title)),
+    [title, slug, slugTouched, editingId],
+  );
 
   const updateTier = (i: number, patch: Partial<TierDraft>) =>
     setTiers((t) => t.map((row, idx) => (idx === i ? { ...row, ...patch } : row)));
@@ -90,10 +101,55 @@ const Admin = () => {
   const removeTier = (i: number) => setTiers((t) => t.filter((_, idx) => idx !== i));
 
   const resetForm = () => {
+    setEditingId(null);
     setTitle(""); setSlug(""); setSlugTouched(false); setSubtitle("");
+    setCategory("music"); setCity("Cape Town");
     setVenue(""); setVenueAddress(""); setDate(""); setDoorsTime("");
     setImage(""); setOrganiser(""); setOrganiserVerified(false); setTrending(false);
     setDescription(""); setTiers([blankTier()]);
+  };
+
+  const startEdit = async (id: string) => {
+    const { data, error } = await supabase
+      .from("events")
+      .select("*, ticket_tiers(name,price,perks,badge,available,sort_order)")
+      .eq("id", id)
+      .maybeSingle();
+    if (error || !data) {
+      toast.error("Could not load event", { description: error?.message });
+      return;
+    }
+    setEditingId(id);
+    setTitle(data.title);
+    setSlug(data.slug);
+    setSlugTouched(true);
+    setSubtitle(data.subtitle ?? "");
+    setCategory(data.category);
+    setCity(data.city);
+    setVenue(data.venue);
+    setVenueAddress(data.venue_address ?? "");
+    setDate(toLocalInput(data.date));
+    setDoorsTime(toLocalInput(data.doors_time));
+    setImage(data.image);
+    setOrganiser(data.organiser);
+    setOrganiserVerified(data.organiser_verified);
+    setTrending(data.trending);
+    setDescription(data.description ?? "");
+    const ts = ([...(data.ticket_tiers ?? [])] as Array<{
+      name: string; price: number; perks: string[] | null; badge: string | null; available: boolean; sort_order: number;
+    }>).sort((a, b) => a.sort_order - b.sort_order);
+    setTiers(
+      ts.length === 0
+        ? [blankTier()]
+        : ts.map((t) => ({
+            name: t.name,
+            price: String(t.price),
+            perks: (t.perks ?? []).join(", "),
+            badge: t.badge ?? "",
+            available: t.available,
+          })),
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -116,35 +172,45 @@ const Admin = () => {
     setBusy(true);
     try {
       const priceFrom = Math.min(...validTiers.map((t) => t.priceNum));
-      const { data: ev, error: evErr } = await supabase
-        .from("events")
-        .insert({
-          owner_id: user.id,
-          slug: finalSlug,
-          title,
-          subtitle: subtitle || null,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          category: category as any,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          city: city as any,
-          venue,
-          venue_address: venueAddress || null,
-          date: new Date(date).toISOString(),
-          doors_time: doorsTime ? new Date(doorsTime).toISOString() : null,
-          image,
-          organiser,
-          organiser_verified: organiserVerified,
-          trending,
-          description,
-          price_from: priceFrom,
-        })
-        .select("id")
-        .single();
-      if (evErr) throw evErr;
+      const payload = {
+        slug: finalSlug,
+        title,
+        subtitle: subtitle || null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        category: category as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        city: city as any,
+        venue,
+        venue_address: venueAddress || null,
+        date: new Date(date).toISOString(),
+        doors_time: doorsTime ? new Date(doorsTime).toISOString() : null,
+        image,
+        organiser,
+        organiser_verified: organiserVerified,
+        trending,
+        description,
+        price_from: priceFrom,
+      };
+
+      let eventId = editingId;
+      if (editingId) {
+        const { error: upErr } = await supabase.from("events").update(payload).eq("id", editingId);
+        if (upErr) throw upErr;
+        // Replace tiers
+        await supabase.from("ticket_tiers").delete().eq("event_id", editingId);
+      } else {
+        const { data: ev, error: evErr } = await supabase
+          .from("events")
+          .insert({ ...payload, owner_id: user.id })
+          .select("id")
+          .single();
+        if (evErr) throw evErr;
+        eventId = ev.id;
+      }
 
       const { error: tierErr } = await supabase.from("ticket_tiers").insert(
         validTiers.map((t, idx) => ({
-          event_id: ev.id,
+          event_id: eventId!,
           name: t.name,
           price: t.priceNum,
           perks: t.perks ? t.perks.split(",").map((p) => p.trim()).filter(Boolean) : [],
@@ -155,7 +221,7 @@ const Admin = () => {
       );
       if (tierErr) throw tierErr;
 
-      toast.success("Event published");
+      toast.success(editingId ? "Event updated" : "Event published");
       resetForm();
       setRefreshKey((k) => k + 1);
     } catch (err) {
@@ -175,6 +241,7 @@ const Admin = () => {
       return;
     }
     toast.success("Event deleted");
+    if (editingId === id) resetForm();
     setRefreshKey((k) => k + 1);
   };
 
@@ -202,7 +269,7 @@ const Admin = () => {
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Admin</p>
           <h1 className="font-display text-3xl font-bold lg:text-4xl">Dashboard</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Add events and ticket tiers — they go live immediately.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Add, edit and remove events — changes go live immediately.</p>
         </div>
         <Button asChild variant="outline" size="sm">
           <Link to="/admin/users">
@@ -212,9 +279,18 @@ const Admin = () => {
       </header>
 
       <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
-        {/* Create */}
+        {/* Create / Edit */}
         <form onSubmit={submit} className="rounded-3xl border border-border bg-card p-6 shadow-sm lg:p-8">
-          <h2 className="font-display text-xl font-bold">New event</h2>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="font-display text-xl font-bold">
+              {editingId ? "Edit event" : "New event"}
+            </h2>
+            {editingId && (
+              <Button type="button" variant="ghost" size="sm" onClick={resetForm}>
+                Cancel edit
+              </Button>
+            )}
+          </div>
 
           <div className="mt-6 grid gap-4">
             <div className="grid gap-2">
@@ -358,7 +434,7 @@ const Admin = () => {
           </div>
 
           <Button type="submit" variant="hero" size="lg" disabled={busy} className="mt-8 w-full">
-            {busy ? "Publishing…" : "Publish event"}
+            {busy ? (editingId ? "Saving…" : "Publishing…") : editingId ? "Save changes" : "Publish event"}
           </Button>
         </form>
 
@@ -373,20 +449,45 @@ const Admin = () => {
                 No events yet. Publish your first one.
               </li>
             )}
-            {events.map((ev) => (
-              <li key={ev.id} className="flex items-start justify-between gap-3 rounded-2xl border border-border bg-background p-4">
-                <div className="min-w-0">
-                  <Link to={`/events/${ev.slug}`} className="font-semibold hover:underline">{ev.title}</Link>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {new Date(ev.date).toLocaleString()} · {ev.city} · {ev.venue}
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">From {formatZAR(ev.price_from)}{ev.trending ? " · Trending" : ""}</p>
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => removeEvent(ev.id)}>
-                  <Icon name="close" className="h-4 w-4" />
-                </Button>
-              </li>
-            ))}
+            {events.map((ev) => {
+              const isEditing = editingId === ev.id;
+              return (
+                <li
+                  key={ev.id}
+                  className={`flex items-start justify-between gap-3 rounded-2xl border p-4 ${
+                    isEditing ? "border-primary bg-primary/5" : "border-border bg-background"
+                  }`}
+                >
+                  <div className="min-w-0">
+                    <Link to={`/events/${ev.slug}`} className="font-semibold hover:underline">{ev.title}</Link>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {new Date(ev.date).toLocaleString()} · {ev.city} · {ev.venue}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">From {formatZAR(ev.price_from)}{ev.trending ? " · Trending" : ""}</p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => startEdit(ev.id)}
+                      aria-label="Edit event"
+                      title="Edit"
+                    >
+                      <Icon name="edit" className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeEvent(ev.id)}
+                      aria-label="Delete event"
+                      title="Delete"
+                    >
+                      <Icon name="close" className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </aside>
       </div>
