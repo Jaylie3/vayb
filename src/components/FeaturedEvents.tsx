@@ -1,15 +1,20 @@
 import { useState, useMemo } from "react";
-import { events } from "@/data/events";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEvents } from "@/lib/eventsApi";
 import { EventCard } from "./EventCard";
 import { Categories } from "./Categories";
 import { Icon } from "./Icon";
 
 export const FeaturedEvents = () => {
   const [filter, setFilter] = useState<string | null>(null);
+  const { data: events = [], isLoading } = useQuery({
+    queryKey: ["events"],
+    queryFn: fetchEvents,
+  });
 
   const filtered = useMemo(
     () => (filter ? events.filter((e) => e.category === filter) : events),
-    [filter],
+    [filter, events],
   );
 
   const trending = filtered.filter((e) => e.trending);
@@ -28,9 +33,6 @@ export const FeaturedEvents = () => {
                 </p>
                 <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">Selling fast</h2>
               </div>
-              <a href="#" className="hidden text-sm font-medium text-primary hover:underline sm:inline">
-                View all →
-              </a>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {trending.map((e, i) => (
@@ -58,9 +60,17 @@ export const FeaturedEvents = () => {
           </div>
         )}
 
-        {filtered.length === 0 && (
+        {!isLoading && filtered.length === 0 && (
           <div className="rounded-3xl border border-dashed border-border p-12 text-center">
-            <p className="text-muted-foreground">No events in this category yet. Check back soon.</p>
+            <p className="text-muted-foreground">
+              {filter ? "No events in this category yet. Check back soon." : "No events have been published yet."}
+            </p>
+          </div>
+        )}
+
+        {isLoading && (
+          <div className="rounded-3xl border border-dashed border-border p-12 text-center">
+            <p className="text-muted-foreground">Loading events…</p>
           </div>
         )}
       </section>
