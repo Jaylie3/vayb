@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { ThemeToggle } from "./ThemeToggle";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const initials = (s: string) => {
   const parts = s.trim().split(/[\s@.]+/).filter(Boolean);
@@ -30,6 +31,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
 
   const goAuth = (mode: "signin" | "signup") => {
     setOpen(false);
@@ -115,9 +117,14 @@ export const Header = () => {
                 <DropdownMenuItem onClick={handleGetTickets}>
                   <Icon name="ticket" className="mr-2 h-4 w-4" aria-hidden /> Browse events
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.info("My tickets coming soon")}>
+                <DropdownMenuItem onClick={() => navigate("/tickets")}>
                   <Icon name="clipboard" className="mr-2 h-4 w-4" aria-hidden /> My tickets
                 </DropdownMenuItem>
+                {isAdmin && (
+                  <DropdownMenuItem onClick={() => navigate("/admin")}>
+                    <Icon name="shield-check" className="mr-2 h-4 w-4" aria-hidden /> Admin dashboard
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <Icon name="arrow-left" className="mr-2 h-4 w-4" aria-hidden /> Sign out
