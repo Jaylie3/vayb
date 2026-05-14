@@ -139,6 +139,17 @@ const Checkout = () => {
     return Math.min(10, Math.max(1, Math.floor(raw)));
   }, [params]);
 
+  // Auto-show success when returning from PayFast (must run before any early return)
+  useEffect(() => {
+    if (params.get("status") === "success") {
+      dispatch({ type: "go", step: "success" });
+      toast.success("Payment confirmed", { description: "Your ticket will appear in My Tickets." });
+    } else if (params.get("status") === "cancelled") {
+      toast.error("Payment cancelled", { description: "You can try again whenever you're ready." });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!event || !tier) return <NotFound />;
 
   const d = formatEventDate(event.date);
