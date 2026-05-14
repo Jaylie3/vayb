@@ -1,0 +1,9 @@
+# Vayb
+
+> South Africa's mobile-first ticketing platform. Discover concerts, festivals, sports and more — tickets delivered by email with low fees and same-day payouts for organisers.
+
+## Pages
+
+- [Discover](/): Browse trending events, festivals, sports, music and comedy across South Africa.
+- [Sign in](/auth): Sign in or create an account to buy tickets and manage your bookings.
+- [My tickets](/tickets): View and manage tickets you've purchased.
