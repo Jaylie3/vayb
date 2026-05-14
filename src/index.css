@@ -123,9 +123,37 @@
   * { @apply border-border; }
   html { scroll-behavior: smooth; }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
     font-feature-settings: "ss01", "cv11";
     font-family: Inter, system-ui, sans-serif;
+    background-color: hsl(var(--background));
+    position: relative;
+  }
+  /* Ambient mesh — gives Liquid Glass surfaces something to refract */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(40rem 30rem at 12% 8%, hsl(18 96% 60% / 0.22), transparent 60%),
+      radial-gradient(34rem 28rem at 92% 18%, hsl(322 88% 62% / 0.20), transparent 60%),
+      radial-gradient(40rem 32rem at 80% 92%, hsl(280 75% 55% / 0.18), transparent 60%),
+      radial-gradient(36rem 30rem at 8% 88%, hsl(188 90% 55% / 0.16), transparent 60%);
+    animation: meshDrift 22s ease-in-out infinite alternate;
+  }
+  .dark body::before {
+    background-image:
+      radial-gradient(40rem 30rem at 12% 8%, hsl(18 96% 60% / 0.28), transparent 60%),
+      radial-gradient(34rem 28rem at 92% 18%, hsl(322 88% 62% / 0.24), transparent 60%),
+      radial-gradient(40rem 32rem at 80% 92%, hsl(280 75% 55% / 0.22), transparent 60%),
+      radial-gradient(36rem 30rem at 8% 88%, hsl(188 90% 55% / 0.20), transparent 60%);
+  }
+  @keyframes meshDrift {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-2%, 1.5%, 0) scale(1.05); }
+    100% { transform: translate3d(2%, -1%, 0) scale(1.02); }
   }
   h1, h2, h3, h4 {
     font-family: "Space Grotesk", system-ui, sans-serif;
