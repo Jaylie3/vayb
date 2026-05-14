@@ -45,7 +45,13 @@ export const Hero = () => {
 
           <h1 className="mt-6 animate-fade-up font-display text-4xl font-bold leading-[1.05] tracking-tight delay-75 sm:text-6xl lg:text-7xl">
             Find your next{" "}
-            <span className="text-gradient-sunset">vayb.</span>
+            <span className="lowercase tracking-tight">
+              <span style={{ color: "#F39200" }}>v</span>
+              <span style={{ color: "#E63946" }}>a</span>
+              <span style={{ color: "#E63946" }}>y</span>
+              <span style={{ color: "#5C3A6E" }}>b</span>
+              <span className="text-white">.</span>
+            </span>
           </h1>
 
           <p className="mt-5 max-w-xl animate-fade-up text-base text-white/80 delay-150 sm:text-lg">
