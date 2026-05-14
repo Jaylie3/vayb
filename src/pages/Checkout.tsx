@@ -218,11 +218,15 @@ const Checkout = () => {
         throw new Error(error?.message ?? "Could not start PayFast checkout");
       }
 
-      // POST a form to PayFast (avoids URL-encoding mismatches with the signature).
+      // POST a form to PayFast. Open in a new tab so the sandboxed Lovable
+      // preview iframe can't block the cross-origin top-level navigation.
+      const isInIframe = window.self !== window.top;
+      const target = isInIframe ? "_blank" : "_self";
       const form = document.createElement("form");
       form.method = "POST";
       form.action = data.actionUrl;
-      form.target = "_top";
+      form.target = target;
+      form.rel = "noopener";
       for (const [k, v] of Object.entries(data.fields as Record<string, string>)) {
         const input = document.createElement("input");
         input.type = "hidden";
@@ -232,6 +236,8 @@ const Checkout = () => {
       }
       document.body.appendChild(form);
       form.submit();
+      // Clean up after submit
+      setTimeout(() => form.remove(), 1000);
     } catch (err) {
       dispatch({ type: "processing", value: false });
       toast.error("Couldn't start PayFast", {
