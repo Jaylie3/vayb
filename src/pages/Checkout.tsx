@@ -175,15 +175,6 @@ const Checkout = () => {
   };
 
   // Auto-show success when returning from PayFast
-  useEffect(() => {
-    if (params.get("status") === "success") {
-      dispatch({ type: "go", step: "success" });
-        toast.success("Payment confirmed", { description: "Your ticket will appear in My Tickets." });
-    } else if (params.get("status") === "cancelled") {
-      toast.error("Payment cancelled", { description: "You can try again whenever you're ready." });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const pay = async (e: React.FormEvent) => {
     e.preventDefault();
