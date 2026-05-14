@@ -154,23 +154,79 @@
     color: transparent;
   }
 
+  /* ── Liquid Glass — Apple-style frosted, refractive surfaces ─────────── */
   .glass-card {
-    background-color: hsl(0 0% 100% / 0.08);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid hsl(0 0% 100% / 0.12);
+    background-image:
+      linear-gradient(135deg, hsl(0 0% 100% / 0.18) 0%, hsl(0 0% 100% / 0.04) 55%, hsl(0 0% 100% / 0.10) 100%);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    border: 1px solid hsl(0 0% 100% / 0.18);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.35),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.06),
+      0 10px 30px -10px hsl(250 35% 10% / 0.35);
   }
   .glass {
-    background-color: hsl(0 0% 100% / 0.10);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid hsl(0 0% 100% / 0.15);
+    position: relative;
+    background-image:
+      linear-gradient(135deg, hsl(0 0% 100% / 0.22) 0%, hsl(0 0% 100% / 0.06) 50%, hsl(0 0% 100% / 0.14) 100%);
+    backdrop-filter: blur(26px) saturate(200%);
+    -webkit-backdrop-filter: blur(26px) saturate(200%);
+    border: 1px solid hsl(0 0% 100% / 0.22);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.4),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.08),
+      0 12px 40px -12px hsl(250 35% 8% / 0.45);
   }
   .glass-dark {
-    background-color: hsl(250 50% 8% / 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid hsl(0 0% 100% / 0.10);
+    background-image:
+      linear-gradient(135deg, hsl(250 50% 14% / 0.65) 0%, hsl(250 50% 8% / 0.55) 100%);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid hsl(0 0% 100% / 0.12);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      0 16px 40px -12px hsl(0 0% 0% / 0.6);
+  }
+  .liquid-glass {
+    position: relative;
+    background-image:
+      linear-gradient(135deg, hsl(0 0% 100% / 0.28) 0%, hsl(0 0% 100% / 0.06) 45%, hsl(0 0% 100% / 0.16) 100%);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border: 1px solid hsl(0 0% 100% / 0.25);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.5),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.08),
+      0 20px 50px -16px hsl(250 35% 8% / 0.5);
+    border-radius: 1.25rem;
+    overflow: hidden;
+  }
+  .liquid-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 80% at 0% 0%, hsl(0 0% 100% / 0.25), transparent 55%);
+    mix-blend-mode: screen;
+  }
+  .dark .glass {
+    background-image:
+      linear-gradient(135deg, hsl(250 40% 18% / 0.55) 0%, hsl(250 50% 8% / 0.45) 100%);
+    border-color: hsl(0 0% 100% / 0.10);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      0 16px 40px -12px hsl(0 0% 0% / 0.55);
+  }
+  .dark .glass-card {
+    background-image:
+      linear-gradient(135deg, hsl(250 40% 16% / 0.55) 0%, hsl(250 50% 8% / 0.4) 100%);
+    border-color: hsl(0 0% 100% / 0.08);
+  }
+  .dark .liquid-glass {
+    background-image:
+      linear-gradient(135deg, hsl(250 40% 20% / 0.55) 0%, hsl(250 50% 8% / 0.4) 100%);
+    border-color: hsl(0 0% 100% / 0.12);
   }
 
   .shadow-glow { box-shadow: var(--shadow-glow); }
