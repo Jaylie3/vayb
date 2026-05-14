@@ -114,11 +114,14 @@ const Auth = () => {
 
         <div className="rounded-3xl border border-white/10 bg-white/5 p-7 shadow-pop backdrop-blur-xl sm:p-9">
           <h1 className="font-display text-3xl font-bold leading-tight">
-            {mode === "signin" ? (
-              <>Welcome back to <span className="text-gradient-sunset">vayb.</span></>
-            ) : (
-              <>Find your next <span className="text-gradient-sunset">vayb.</span></>
-            )}
+            {mode === "signin" ? <>Welcome back to </> : <>Find your next </>}
+            <span className="lowercase tracking-tight">
+              <span style={{ color: "#F39200" }}>v</span>
+              <span style={{ color: "#E63946" }}>a</span>
+              <span style={{ color: "#E63946" }}>y</span>
+              <span style={{ color: "#5C3A6E" }}>b</span>
+              <span>.</span>
+            </span>
           </h1>
           <p className="mt-2 text-sm text-white/70">
             {mode === "signin"
