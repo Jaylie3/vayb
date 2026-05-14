@@ -2,7 +2,7 @@ import { Logo } from "./Logo";
 import { Instagram, Facebook, Twitter } from "lucide-react";
 
 export const Footer = () => (
-  <footer className="border-t border-border/60 bg-muted/40">
+  <footer className="glass border-t border-white/10">
     <div className="container grid gap-10 py-16 md:grid-cols-4">
       <div className="space-y-4">
         <Logo />

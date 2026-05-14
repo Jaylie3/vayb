@@ -65,7 +65,7 @@ export const Header = () => {
         "sticky top-0 z-50 transition-smooth",
         transparent
           ? "border-b border-transparent bg-transparent"
-          : "border-b border-border/60 bg-background/85 backdrop-blur-xl",
+          : "glass border-b border-white/10",
       )}
     >
       <div className="container flex h-16 items-center justify-between gap-4">
