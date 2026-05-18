@@ -8,7 +8,7 @@ import RootLayout from "./layouts/RootLayout";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./auth/AuthProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const Index = lazy(() => import("./pages/Index"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
@@ -44,6 +44,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <RouterProvider router={router} />
+          <Analytics />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
