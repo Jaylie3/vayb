@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Icon } from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { TicketSelector } from "@/components/TicketSelector";
@@ -11,6 +12,14 @@ import { useQuery } from "@tanstack/react-query";
 import NotFound from "./NotFound";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+
+const SITE_URL = "https://quick-event-go.lovable.app";
+
+const toAbsolute = (url?: string) => {
+  if (!url) return undefined;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+};
 
 const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,8 +75,54 @@ const EventDetail = () => {
     toast.success("Link copied to clipboard");
   };
 
+  const canonical = `${SITE_URL}/events/${event.slug}`;
+  const ogImage = toAbsolute(event.heroImage ?? event.image);
+  const minPrice = Math.min(...event.tickets.map((t) => t.price));
+  const metaDescription = (event.description ?? `Tickets for ${event.title} at ${event.venue}, ${event.city}.`)
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 158);
+  const eventSchema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    description: event.description,
+    startDate: event.date,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    image: ogImage ? [ogImage] : undefined,
+    location: {
+      "@type": "Place",
+      name: event.venue,
+      address: { "@type": "PostalAddress", addressLocality: event.city, addressCountry: "ZA" },
+    },
+    organizer: { "@type": "Organization", name: event.organiser },
+    offers: event.tickets.map((t) => ({
+      "@type": "Offer",
+      name: t.name,
+      price: t.price,
+      priceCurrency: "ZAR",
+      availability: t.available
+        ? "https://schema.org/InStock"
+        : "https://schema.org/SoldOut",
+      url: canonical,
+    })),
+  };
+
   return (
     <>
+      <Helmet>
+        <title>{`${event.title} — Tickets from ${formatZAR(minPrice)} | Vayb`.slice(0, 60)}</title>
+        <meta name="description" content={metaDescription} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:title" content={`${event.title} — ${event.venue}, ${event.city}`} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:type" content="event" />
+        {ogImage && <meta property="og:image" content={ogImage} />}
+        {ogImage && <meta name="twitter:image" content={ogImage} />}
+        <script type="application/ld+json">{JSON.stringify(eventSchema)}</script>
+      </Helmet>
       {/* Hero */}
       <section className="relative -mt-16 h-[55vh] min-h-[420px] w-full overflow-hidden">
         <img
